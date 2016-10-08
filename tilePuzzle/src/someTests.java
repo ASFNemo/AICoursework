@@ -11,8 +11,9 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-        test.BFS();
+        // test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
         //test.randomDirection();
+        test.DFS();
 
 
     }
@@ -93,6 +94,10 @@ public class someTests {
             max--;
         }
 
+    }
+
+    public void DFS(){
+        DFS search = new DFS(3);
     }
 
 

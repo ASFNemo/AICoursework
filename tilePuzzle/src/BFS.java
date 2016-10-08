@@ -115,7 +115,6 @@ public class BFS {
 
                 char[][] blocksWorld = currentNode.getBlocksWorld();
 
-                System.out.println("node: " + i);
                 for (int j = 0; j< blocksWorld.length; j++){
                     System.out.println(blocksWorld[j]);
                 }

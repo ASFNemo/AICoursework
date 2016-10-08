@@ -103,27 +103,27 @@ public class StateNode {
                 // take the current position of the agent and add one
                 moveAgentTo[0] = agentPosition[0] - 1;
                 moveAgentTo[1] = agentPosition[1];
-                System.out.println('u');
-                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
+                //System.out.println('u');
+                //System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'd':
                 moveAgentTo[0] = agentPosition[0] + 1;
                 moveAgentTo[1] = agentPosition[1];
-                System.out.println('d');
-                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
+                //System.out.println('d');
+                //System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'l':
                 moveAgentTo[0] = agentPosition[0];
                 moveAgentTo[1] = agentPosition[1] - 1;
-                System.out.println('l');
-                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
+                //System.out.println('l');
+                //System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'r':
                 moveAgentTo[0] = agentPosition[0];
                 moveAgentTo[1] = agentPosition[1] +  1;
-                System.out.println('r');
+                //System.out.println('r');
 
-                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
+               // System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
         }
         //System.out.println(moveAgentTo[0] + ", " + moveAgentTo[1]);
@@ -147,7 +147,7 @@ public class StateNode {
             couldComplete = true;
         }
 
-        System.out.println(couldComplete);
+        //System.out.println(couldComplete);
         // if the move was done return true, if it cannot be done return false
         return couldComplete;
     }
