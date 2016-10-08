@@ -5,6 +5,10 @@ import java.util.ArrayList;
  */
 public class Lifo {
 
+    /**
+     *  Last in first out that represents the tree in depth firs search
+     */
+
     ArrayList<StateNode> nodesArray;
 
     public Lifo() {

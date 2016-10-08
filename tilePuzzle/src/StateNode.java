@@ -19,8 +19,15 @@ public class StateNode {
 
     char[][] blocksWorld;
 
-    public StateNode(int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentPostion){
+    public StateNode(int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
 
+        /**
+            Use this constructor when you are creating the initial and final state
+         */
+        aPosition = new int[2];
+        bPosition = new int[2];
+        cPosition = new int[2];
+        agentPosition = new int[2];
         blocksWorld = new char[boardSizeN][boardSizeN];
 
         this.boardSize = boardSizeN;
@@ -33,30 +40,32 @@ public class StateNode {
                     if (i == TAPosition[0] && j == TAPosition[1]) {
                         blocksWorld[i][j] = 'a';
                         aPosition = TAPosition;
-                        System.out.println("a");
+                        //System.out.println("a");
                     } else if (i == TBPosition[0] && j == TBPosition[1] && boardSizeN > 2) {
                         blocksWorld[i][j] = 'b';
                         bPosition = TBPosition;
-                        System.out.println('b');
+                        //System.out.println('b');
                     } else if (i == TCPosition[0] && j == TCPosition[1] && boardSizeN > 3) {
                         blocksWorld[i][j] = 'c';
                         cPosition = TCPosition;
-                        System.out.println('c');
+                        //System.out.println('c');
 
-                    } else if (i == agentPostion[0] && j == agentPostion[1]) {
+                    } else if (i == agentsPostion[0] && j == agentsPostion[1]) {
                         blocksWorld[i][j] = 's';
-                        this.agentPosition = agentPostion;
-                        System.out.println('s');
+                        this.agentPosition = agentsPostion;
+                        //System.out.println('s');
 
                     } else {
                         blocksWorld[i][j] = 'p';
-                        System.out.println('p');
+                        //System.out.println('p');
                     }
                 }
             }
 
-            System.out.println(blocksWorld[boardSizeN - 2]);
-            System.out.println(blocksWorld[boardSizeN - 1]);
+//            System.out.println("This is tge initial state of the board");
+//            for (int i = 0; i < blocksWorld.length; i++){
+//                System.out.println(blocksWorld[i]);
+//            }
         } else {
             System.out.println(" the board size has to be greater than one");
             System.exit(0);
@@ -66,12 +75,26 @@ public class StateNode {
     // add another constructor that only takes the matrix and the current agent position.
 
 
-    public StateNode(char[][] blocksWorld, int[] agentPosition) {
+    public StateNode(char[][] blocksWorld, int[] agentPosition, int[] positionA, int[] positionB, int[] positionC) {
+        /**
+         * use this constructor when you are creating subsequent nodes
+         */
         this.blocksWorld = blocksWorld;
         this.agentPosition = agentPosition;
+        this.aPosition = positionA;
+        this.bPosition = positionB;
+        this.cPosition = positionC;
+
+//        System.out.println("==========");
+//        for (int i = 0; i < blocksWorld.length; i++){
+//            System.out.println(blocksWorld[i]);
+//        }
     }
 
+
     public boolean moveAgent(char direction){
+
+        boolean couldComplete;
 
         int[] moveAgentTo = {0,0};
 
@@ -81,29 +104,34 @@ public class StateNode {
                 moveAgentTo[0] = agentPosition[0] - 1;
                 moveAgentTo[1] = agentPosition[1];
                 System.out.println('u');
+                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'd':
                 moveAgentTo[0] = agentPosition[0] + 1;
                 moveAgentTo[1] = agentPosition[1];
                 System.out.println('d');
+                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'l':
                 moveAgentTo[0] = agentPosition[0];
                 moveAgentTo[1] = agentPosition[1] - 1;
                 System.out.println('l');
+                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
             case 'r':
                 moveAgentTo[0] = agentPosition[0];
                 moveAgentTo[1] = agentPosition[1] +  1;
                 System.out.println('r');
+
+                System.out.println(moveAgentTo[0] +"," + moveAgentTo[1]);
                 break;
         }
-        System.out.println(moveAgentTo[0] + ", " + moveAgentTo[1]);
+        //System.out.println(moveAgentTo[0] + ", " + moveAgentTo[1]);
 
-        if (moveAgentTo[0] < 0 || moveAgentTo[1] < 0 || moveAgentTo[0] >= boardSize || moveAgentTo[1] >= boardSize) {
-            System.out.println("in the if statment");
+        if (moveAgentTo[0] < 0 || moveAgentTo[1] < 0 || moveAgentTo[0] > (boardSize -1) || moveAgentTo[1] > (boardSize -1)) {
+            //System.out.println("in the if statment");
             // return false as you cannot do this mpve as it would move the agent of the board
-            return false;
+            couldComplete = false;
         } else {
             // here do the change of agent position
             // move element in new agent position to old agent postion.
@@ -115,9 +143,13 @@ public class StateNode {
             blocksWorld[moveAgentTo[0]][moveAgentTo[1]] = 's';
             agentPosition[0] = moveAgentTo[0];
             agentPosition[1] = moveAgentTo[1];
+
+            couldComplete = true;
         }
+
+        System.out.println(couldComplete);
         // if the move was done return true, if it cannot be done return false
-        return true;
+        return couldComplete;
     }
 
 
@@ -129,4 +161,19 @@ public class StateNode {
         return this.agentPosition;
     }
 
+    public int[] getaPosition(){
+        return this.aPosition;
+    }
+
+    public int[] getbPosition() {
+        return bPosition;
+    }
+
+    public int[] getcPosition() {
+        return cPosition;
+    }
+
+    public int getBoardSize() {
+        return boardSize;
+    }
 }

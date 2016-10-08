@@ -5,17 +5,29 @@ import java.util.ArrayList;
  */
 public class Fifo {
 
+    /**
+     * First in first out list that represents a the tree in breadth first search
+     */
+
     ArrayList<StateNode> nodesArray;
 
     public Fifo() {
-        this.nodesArray = nodesArray;
+        this.nodesArray = new ArrayList<>();
     }
 
     public void addConfig(StateNode node){
         this.nodesArray.add(node);
+
+        System.out.println(nodesArray.size());
+
+
     }
 
-    public StateNode getNextNode(){
+    public StateNode getNextNode() {
         return this.nodesArray.get(0);
+    }
+
+    public void removeUsedNode(){
+        this.nodesArray.remove(0);
     }
 }
