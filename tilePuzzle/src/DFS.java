@@ -34,7 +34,7 @@ public class DFS {
 
         int[] finalAgentPosition = {(boardSize -1), (boardSize -1)};
 
-        finalState = new StateNode(size, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition);
+        finalState = new StateNode(null, size, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition);
 
         this.finalAPosition = finalState.getaPosition();
         this.finalBPosition = finalState.getbPosition();
@@ -71,7 +71,7 @@ public class DFS {
 
         int[] s = {(size -1), (size - 1)};
 
-        return new StateNode(size, a, b, c, s);
+        return new StateNode(null, size, a, b, c, s);
 
     }
 
@@ -82,19 +82,26 @@ public class DFS {
             StateNode currentNode = tree.getNode();
 
             // FOR DEBUGGING PURPOSES ONLY, SHOW CURRENT BOARD STATE
-            if (moves < 15 || moves == 1500 || moves == 15000 || moves == 90000 || moves == 150000 || moves == 2500000 || moves == 25000000) {
+            if (moves < 100 || moves == 1500 || moves == 15000 || moves == 90000 || moves == 150000 || moves == 2500000 || moves == 25000000) {
                 char[][] blocksWorld = currentNode.getBlocksWorld();
 
+
                 System.out.println("Node: " + moves);
+                System.out.println("a position: " + currentNode.aPosition[0] +"," + currentNode.aPosition[1]);
+                System.out.println("b position: " + currentNode.bPosition[0] +"," + currentNode.bPosition[1]);
+                System.out.println("c position: " + currentNode.cPosition[0] +"," + currentNode.cPosition[1]);
+                System.out.println("agent position: " + currentNode.agentPosition[0] +"," + currentNode.agentPosition[1]);
+                System.out.println();
                 for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
                 }
             }
 
-            // check if the node is equal to final node
-            if (currentNode.getaPosition() == finalAPosition && currentNode.getbPosition() == finalBPosition &&
-                    currentNode.getcPosition() == finalCPosition){
-                // if yes - print the final node, how many nodes were searched and finish the system
+            // check if the Node is equal to final Node
+            if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
+                    ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
+                    (currentNode.getcPosition() == finalCPosition || !currentNode.iscBlockInUse())){
+                // if yes - print the final Node, how many nodes were searched and finish the system
                 char[][] blocksWorld = currentNode.getBlocksWorld();
                 System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
                 for (int j = 0; j< blocksWorld.length; j++){
@@ -104,16 +111,31 @@ public class DFS {
                 break;
             } else {
                 //if no
+
+                StateNode node = new StateNode(currentNode, currentNode.boardSize, currentNode.aPosition,
+                        currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition);
+
                 boolean canMove = false;
                 while (!canMove) {
                     // get random direction and apply to agent,
-                    if (currentNode.moveAgent(getDirection())){
-                        tree.addNode(currentNode);
+                    char direction = getDirection();
+                    boolean didMove = node.moveAgent(direction);
+
+                    if (moves < 100){
+                        System.out.println("direction: " + direction + " did move? " + didMove);
+                    }
+
+                    if (didMove){
+                        currentNode.addChild(node);
+                        tree.addNode(node);
                         canMove = true;
                     }
                     // if cannot move, repeat until one is accepted
                     // if move is accepted add to the queue
                 }
+
+
+
             }
             moves++;
         }

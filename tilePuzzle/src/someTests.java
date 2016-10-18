@@ -14,20 +14,16 @@ public class someTests {
         // test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
         //test.randomDirection();
         test.DFS();
-
+        //test.testMoveDown();
+        //test.testMoveRight();
+        //test.IfFinalRecognized();
 
     }
 
     public void stateNode(){
-        int boardSize = 3;
-        int[] a = {(boardSize -1), 0};
-        int[] b = {(boardSize -1), 1};
-        int[] c = {(boardSize -1), 2};
-        int[] s = {(boardSize -1), (boardSize - 1)};
+        StateNode state = createStartNode(3);
 
-        StateNode state = new StateNode(boardSize, a, b, c, s);
-
-        System.out.println("going up");
+        System.out.println("going left");
         state.moveAgent('l');
         char[][] agentBoard = state.getBlocksWorld();
         int[] agentPosition = state.getAgentPosition();
@@ -35,19 +31,30 @@ public class someTests {
         int[] bPosition = state.getbPosition();
         int[] cPosition = state.getcPosition();
 
-        System.out.println("====");
-        System.out.println(agentBoard[boardSize - 2]);
-        System.out.println(agentBoard[boardSize - 1]);
+        char[][] blocksWorld = state.getBlocksWorld();
+
+        System.out.println("a position: " + state.aPosition[0] +"," + state.aPosition[1]);
+        System.out.println("b position: " + state.bPosition[0] +"," + state.bPosition[1]);
+        System.out.println("c position: " + state.cPosition[0] +"," + state.cPosition[1]);
+        System.out.println("agent position: " + state.agentPosition[0] +"," + state.agentPosition[1]);
+        System.out.println();
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
 
         System.out.println("---------");
-        StateNode state2 = new StateNode(agentBoard, agentPosition, aPosition, bPosition, cPosition);
+       // StateNode state2 = new StateNode(null, agentBoard, agentPosition, aPosition, bPosition, cPosition);
 
-        state.moveAgent('u');
-        agentBoard = state2.getBlocksWorld();
+        state.moveAgent('l');
+        //agentBoard = state2.getBlocksWorld();
 
-        System.out.println("[[[[[");
-        for (int i = 0; i < agentBoard.length; i++){
-            System.out.println(agentBoard[i]);
+        System.out.println("a position: " + state.aPosition[0] +"," + state.aPosition[1]);
+        System.out.println("b position: " + state.bPosition[0] +"," + state.bPosition[1]);
+        System.out.println("c position: " + state.cPosition[0] +"," + state.cPosition[1]);
+        System.out.println("agent position: " + state.agentPosition[0] +"," + state.agentPosition[1]);
+        System.out.println();
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
         }
 
     }
@@ -96,8 +103,114 @@ public class someTests {
 
     }
 
+    public void testMoveDown(){
+
+        int boardSize = 3;
+        int[] a = {(boardSize -1), 0};
+        int[] b = {(boardSize -1), (boardSize - 1)};
+        int[] c = {(boardSize -1), 2};
+        int[] s = {(boardSize -1), 1};
+
+        StateNode state = new StateNode(null, boardSize, a, b, c, s);
+
+        char[][] blocksWorld = state.getBlocksWorld();
+
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
+
+        boolean didMove = state.moveAgent('d');
+
+        System.out.println(didMove);
+
+        blocksWorld = state.getBlocksWorld();
+
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
+
+
+
+    }
+
+    public void testMoveRight(){
+        int boardSize = 3;
+        int[] a = {(boardSize -2), 0};
+        int[] b = {(boardSize -1), 1};
+        int[] c = {(boardSize -1), 2};
+        int[] s = {(boardSize -1), 0};
+
+        StateNode state = new StateNode(null, boardSize, a, b, c, s);
+
+        char[][] blocksWorld = state.getBlocksWorld();
+
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
+
+        boolean didMove = state.moveAgent('r');
+
+        System.out.println(didMove);
+
+        blocksWorld = state.getBlocksWorld();
+
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
+    }
+
     public void DFS(){
         DFS search = new DFS(3);
+    }
+
+    public void IfFinalRecognized(){
+
+        StateNode state = createStartNode(3);
+
+        int[] finalAPosition = {1,0};
+        int[] finalBPosition = {2, 0};
+        int[] finalCPosition = {100, 100};
+
+
+        state.moveAgent('u');
+        state.moveAgent('l');
+        state.moveAgent('l');
+        state.moveAgent('d');
+        state.moveAgent('r');
+
+        char[][] blocksWorld = state.getBlocksWorld();
+
+        System.out.println("a position: " + state.aPosition[0] +"," + state.aPosition[1]);
+        System.out.println("b position: " + state.bPosition[0] +"," + state.bPosition[1]);
+        System.out.println("c position: " + state.cPosition[0] +"," + state.cPosition[1]);
+        System.out.println("agent position: " + state.agentPosition[0] +"," + state.agentPosition[1]);
+
+        for (int j = 0; j < blocksWorld.length; j++) {
+            System.out.println(blocksWorld[j]);
+        }
+
+        if ((state.getaPosition()[0] == finalAPosition[0] && state.getaPosition()[1] == finalAPosition[1]) &&
+                ((state.getbPosition()[0] == finalBPosition[0] && state.getbPosition()[1] == finalBPosition[1]) || !state.isbBlockInUse()) &&
+                (state.getcPosition() == finalCPosition || !state.iscBlockInUse())){
+            // if yes - print the final Node, how many nodes were searched and finish the system
+            System.out.println("Depth first search has been able to complete!");
+
+        }
+
+
+
+    }
+
+    public StateNode createStartNode(int size ){
+        int boardSize = size;
+        int[] a = {(boardSize -1), 0};
+        int[] b = {(boardSize -1), 1};
+        int[] c = {(boardSize -1), 2};
+        int[] s = {(boardSize -1), (boardSize - 1)};
+
+        StateNode state = new StateNode(null, boardSize, a, b, c, s);
+
+        return state;
     }
 
 

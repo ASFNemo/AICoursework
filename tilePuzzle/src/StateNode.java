@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Created by asherfischbaum on 06/10/2016.
  */
@@ -10,6 +12,9 @@ public class StateNode {
 //    private final char tileC = 'c';
 //    private final char smileTile = 's';
 
+    StateNode parentNode;
+    ArrayList<StateNode> children;
+
     int[] aPosition;
     int[] bPosition;
     int[] cPosition;
@@ -17,13 +22,21 @@ public class StateNode {
 
     int boardSize;
 
+    boolean bBlockInUse = false;
+    boolean cBlockInUse = false;
+
     char[][] blocksWorld;
 
-    public StateNode(int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
+    public StateNode(StateNode parent, int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
 
         /**
             Use this constructor when you are creating the initial and final state
          */
+
+
+        this.parentNode = parent;
+        children = new ArrayList<>();
+
         aPosition = new int[2];
         bPosition = new int[2];
         cPosition = new int[2];
@@ -44,11 +57,13 @@ public class StateNode {
                     } else if (i == TBPosition[0] && j == TBPosition[1] && boardSizeN > 2) {
                         blocksWorld[i][j] = 'b';
                         bPosition = TBPosition;
+                        bBlockInUse = true;
                         //System.out.println('b');
                     } else if (i == TCPosition[0] && j == TCPosition[1] && boardSizeN > 3) {
                         blocksWorld[i][j] = 'c';
                         cPosition = TCPosition;
                         //System.out.println('c');
+                        cBlockInUse = true;
 
                     } else if (i == agentsPostion[0] && j == agentsPostion[1]) {
                         blocksWorld[i][j] = 's';
@@ -75,21 +90,25 @@ public class StateNode {
     // add another constructor that only takes the matrix and the current agent position.
 
 
-    public StateNode(char[][] blocksWorld, int[] agentPosition, int[] positionA, int[] positionB, int[] positionC) {
-        /**
-         * use this constructor when you are creating subsequent nodes
-         */
-        this.blocksWorld = blocksWorld;
-        this.agentPosition = agentPosition;
-        this.aPosition = positionA;
-        this.bPosition = positionB;
-        this.cPosition = positionC;
-
-//        System.out.println("==========");
-//        for (int i = 0; i < blocksWorld.length; i++){
-//            System.out.println(blocksWorld[i]);
-//        }
-    }
+//    public StateNode(StateNode parent, char[][] blocksWorld, int[] agentPosition, int[] positionA, int[] positionB, int[] positionC) {
+//        /**
+//         * use this constructor when you are creating subsequent nodes
+//         */
+//
+//        this.parentNode = parent;
+//        children = new ArrayList<>();
+//
+//        this.blocksWorld = blocksWorld;
+//        this.agentPosition = agentPosition;
+//        this.aPosition = positionA;
+//        this.bPosition = positionB;
+//        this.cPosition = positionC;
+//
+////        System.out.println("==========");
+////        for (int i = 0; i < blocksWorld.length; i++){
+////            System.out.println(blocksWorld[i]);
+////        }
+//    }
 
 
     public boolean moveAgent(char direction){
@@ -135,8 +154,17 @@ public class StateNode {
         } else {
             // here do the change of agent position
             // move element in new agent position to old agent postion.
-            if (moveAgentTo == aPosition){
+            if (moveAgentTo[0] == aPosition[0] && moveAgentTo[1] == aPosition[1]){
                 // move the a tile into the current agent position
+                this.aPosition[0] = this.agentPosition[0];
+                this.aPosition[1] = this.agentPosition[1];
+
+            } else if (moveAgentTo[0] == bPosition[0] && moveAgentTo[1] == bPosition[1] && bBlockInUse){
+                this.bPosition[0] = this.agentPosition[0];
+                this.bPosition[1] = this.agentPosition[1];
+            } else if (moveAgentTo[0] == cPosition[0] && moveAgentTo[1] == cPosition[1] && cBlockInUse){
+                this.cPosition[0] = this.agentPosition[0];
+                this.cPosition[1] = this.agentPosition[1];
             }
             blocksWorld[agentPosition[0]][agentPosition[1]] = blocksWorld[moveAgentTo[0]][moveAgentTo[1]];
             // move agent position to new position
@@ -175,5 +203,17 @@ public class StateNode {
 
     public int getBoardSize() {
         return boardSize;
+    }
+
+    public void addChild(StateNode node){
+        children.add(node);
+    }
+
+    public boolean isbBlockInUse() {
+        return bBlockInUse;
+    }
+
+    public boolean iscBlockInUse() {
+        return cBlockInUse;
     }
 }

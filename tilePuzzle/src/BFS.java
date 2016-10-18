@@ -43,7 +43,7 @@ public class BFS {
         int[] finalCPosition = {(boardSize - 1), 1};
         int[] finalAgentPosition = {(boardSize -1), (boardSize -1)};
 
-        finalState = new StateNode(size, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition);
+        finalState = new StateNode(null, size, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition);
 
         finalAPosition = finalState.getaPosition();
         finalBPosition = finalState.getbPosition();
@@ -81,7 +81,7 @@ public class BFS {
         int[] c = {(boardSize -1), 2};
         int[] s = {(boardSize -1), (boardSize - 1)};
 
-        return new StateNode(boardSize, a, b, c, s);
+        return new StateNode(null, boardSize, a, b, c, s);
     }
 
     public void start(){
@@ -94,7 +94,7 @@ public class BFS {
             if (i < 10){
                 char[][] blocksWorld = currentNode.getBlocksWorld();
 
-                System.out.println("node: " + i);
+                System.out.println("Node: " + i);
                 System.out.println("A; " + currentNode.getaPosition()[0] +"," + currentNode.getaPosition()[1] + " B: "
                         + currentNode.getbPosition()[0] +"," +currentNode.getbPosition()[1] + " C: " +
                         currentNode.getcPosition()[0]+","+ currentNode.getcPosition()[1] + " Agent: " +
@@ -126,7 +126,11 @@ public class BFS {
 
                 char[] moveDirections = randomDirection();
 
-                // apply each direction to the start node
+                // apply each direction to the start Node
+
+                /**
+
+                 This is the stuff to actually do the stuff
 
                 for (char direction : moveDirections) {
                     StateNode n = new StateNode(currentNode.getBlocksWorld(), currentNode.getAgentPosition(),
@@ -143,6 +147,7 @@ public class BFS {
 
 
                 }
+                */
 
 
             }
