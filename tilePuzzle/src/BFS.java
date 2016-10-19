@@ -45,9 +45,9 @@ public class BFS {
 
         finalState = new StateNode(null, size, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition);
 
-        finalAPosition = finalState.getaPosition();
-        finalBPosition = finalState.getbPosition();
-        finalCPosition = finalState.getcPosition();
+        this.finalAPosition = finalState.getaPosition();
+        this.finalBPosition = finalState.getbPosition();
+        this.finalCPosition = finalState.getcPosition();
     }
 
     public int[] whereToPutA(int size){
@@ -84,77 +84,124 @@ public class BFS {
         return new StateNode(null, boardSize, a, b, c, s);
     }
 
+//    public void start(){
+//
+//        //int nodesSeen = 0;
+//        int i = 0;
+//        while (i < 10) {
+//            i++;
+//            StateNode currentNode = tree.getNextNode(); // make this into a new variable so that i can reassign it later in loops
+//            //nodesSeen++;
+//            if (i < 100){
+//                char[][] blocksWorld = currentNode.getBlocksWorld();
+//
+//                System.out.println("Node: " + i);
+//                System.out.println("A; " + currentNode.getaPosition()[0] +"," + currentNode.getaPosition()[1] + " B: "
+//                        + currentNode.getbPosition()[0] +"," +currentNode.getbPosition()[1] + " C: " +
+//                        currentNode.getcPosition()[0]+","+ currentNode.getcPosition()[1] + " Agent: " +
+//                        currentNode.getAgentPosition()[0]+","+currentNode.getAgentPosition()[1] + " board size: " +
+//                        currentNode.getBoardSize());
+//                for (int j = 0; j< blocksWorld.length; j++){
+//                    System.out.println(blocksWorld[j]);
+//                }
+//            }
+//
+//            // check if it is equivilant to the final state
+//
+//            if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
+//                    ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
+//                    (currentNode.getcPosition() == finalCPosition || !currentNode.iscBlockInUse())) {
+//                // end and report how many nodes where expanded
+//                char[][] blocksWorld = currentNode.getBlocksWorld();
+//
+//                System.out.println("whe have gotten to the final position in: " + i + " moves");
+//
+//                for (int j = 0; j< blocksWorld.length; j++){
+//                    System.out.println(blocksWorld[j]);
+//                }
+//
+//                break;
+//            } else {
+//
+//                // get a set of directions to move the agent
+//
+//                char[] moveDirections = randomDirection();
+//
+//                // apply each direction to the start Node
+//
+//                /**
+//
+//                 This is the stuff to actually do the stuff
+//
+//                for (char direction : moveDirections) {
+//                    StateNode n = new StateNode(currentNode.getBlocksWorld(), currentNode.getAgentPosition(),
+//                            currentNode.getaPosition(), currentNode.getbPosition(), currentNode.getcPosition());
+//                    // add each new board state to the Fifo list (tree)
+//                    if (n.moveAgent(direction)) {
+//                        tree.addConfig(n);
+//                    } else {
+//                        // work out what to do if it does not work, this will be due to the move taking the agent of the board
+//                    }
+//
+//                    // then remove the first elemetn from the tree (list)
+//                    //tree.removeUsedNode();
+//
+//
+//                }
+//                */
+//
+//
+//            }
+//
+//
+//        }
+//
+//
+//    }
+
+
     public void start(){
 
-        //int nodesSeen = 0;
-        int i = 0;
-        while (i < 10) {
-            StateNode currentNode = tree.getNextNode(); // make this into a new variable so that i can reassign it later in loops
-            //nodesSeen++;
-            if (i < 10){
-                char[][] blocksWorld = currentNode.getBlocksWorld();
+        int nodesExpanded = 0;
 
-                System.out.println("Node: " + i);
-                System.out.println("A; " + currentNode.getaPosition()[0] +"," + currentNode.getaPosition()[1] + " B: "
-                        + currentNode.getbPosition()[0] +"," +currentNode.getbPosition()[1] + " C: " +
-                        currentNode.getcPosition()[0]+","+ currentNode.getcPosition()[1] + " Agent: " +
-                        currentNode.getAgentPosition()[0]+","+currentNode.getAgentPosition()[1] + " board size: " +
-                        currentNode.getBoardSize());
-                for (int j = 0; j< blocksWorld.length; j++){
-                    System.out.println(blocksWorld[j]);
-                }
-                i++;
-            }
+        while (true){
 
-            // check if it is equivilant to the final state
+            StateNode node = tree.getNextNode();
 
-            if (currentNode.getaPosition() == finalAPosition && currentNode.getbPosition() == finalBPosition &&
-                    currentNode.getcPosition() == finalCPosition) {
+            // check if it is the final node
+            // if yes - print that it is in final state and how many expanded nodes it took
+            if ((node.getaPosition()[0] == finalAPosition[0] && node.getaPosition()[1] == finalAPosition[1]) &&
+                    ((node.getbPosition()[0] == finalBPosition[0] && node.getbPosition()[1] == finalBPosition[1]) || !node.isbBlockInUse()) &&
+                    (node.getcPosition() == finalCPosition || !node.iscBlockInUse())) {
                 // end and report how many nodes where expanded
-                System.out.println("whe have gotten to the final position, here you go: :)");
+                char[][] blocksWorld = node.getBlocksWorld();
 
-                char[][] blocksWorld = currentNode.getBlocksWorld();
+                System.out.println("whe have gotten to the final position in: " + nodesExpanded + " expanded nodes");
 
-                for (int j = 0; j< blocksWorld.length; j++){
+                for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
                 }
 
                 break;
             } else {
-
-                // get a set of directions to move the agent
-
-                char[] moveDirections = randomDirection();
-
-                // apply each direction to the start Node
-
-                /**
-
-                 This is the stuff to actually do the stuff
-
-                for (char direction : moveDirections) {
-                    StateNode n = new StateNode(currentNode.getBlocksWorld(), currentNode.getAgentPosition(),
-                            currentNode.getaPosition(), currentNode.getbPosition(), currentNode.getcPosition());
-                    // add each new board state to the Fifo list (tree)
-                    if (n.moveAgent(direction)) {
-                        tree.addConfig(n);
-                    } else {
-                        // work out what to do if it does not work, this will be due to the move taking the agent of the board
+                // else
+                // get the list of possible other directions
+                char[] directions = randomDirection();
+                // for each direction create a new node and check if it can be moved in that direction
+                for(char direction: directions){
+                    StateNode childNode = new StateNode(node, node.getBoardSize(), node.getaPosition(), node.getbPosition(), node.getcPosition(), node.getAgentPosition());
+                    // if yes add them to the states children and add them to the tree
+                    if (childNode.moveAgent(direction)){
+                        node.addChild(childNode);
+                        tree.addConfig(childNode);
                     }
-
-                    // then remove the first elemetn from the tree (list)
-                    //tree.removeUsedNode();
-
-
                 }
-                */
 
+                // otherwise just move onto the next one.
+                //
 
             }
-
-
         }
-
 
     }
 

@@ -24,7 +24,9 @@ public class Fifo {
     }
 
     public StateNode getNextNode() {
-        return this.nodesArray.get(0);
+        StateNode node = this.nodesArray.get(0);
+        removeUsedNode();
+        return node;
     }
 
     public void removeUsedNode(){
