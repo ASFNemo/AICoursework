@@ -1,4 +1,6 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -84,81 +86,6 @@ public class BFS {
         return new StateNode(null, boardSize, a, b, c, s);
     }
 
-//    public void start(){
-//
-//        //int nodesSeen = 0;
-//        int i = 0;
-//        while (i < 10) {
-//            i++;
-//            StateNode currentNode = tree.getNextNode(); // make this into a new variable so that i can reassign it later in loops
-//            //nodesSeen++;
-//            if (i < 100){
-//                char[][] blocksWorld = currentNode.getBlocksWorld();
-//
-//                System.out.println("Node: " + i);
-//                System.out.println("A; " + currentNode.getaPosition()[0] +"," + currentNode.getaPosition()[1] + " B: "
-//                        + currentNode.getbPosition()[0] +"," +currentNode.getbPosition()[1] + " C: " +
-//                        currentNode.getcPosition()[0]+","+ currentNode.getcPosition()[1] + " Agent: " +
-//                        currentNode.getAgentPosition()[0]+","+currentNode.getAgentPosition()[1] + " board size: " +
-//                        currentNode.getBoardSize());
-//                for (int j = 0; j< blocksWorld.length; j++){
-//                    System.out.println(blocksWorld[j]);
-//                }
-//            }
-//
-//            // check if it is equivilant to the final state
-//
-//            if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
-//                    ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-//                    (currentNode.getcPosition() == finalCPosition || !currentNode.iscBlockInUse())) {
-//                // end and report how many nodes where expanded
-//                char[][] blocksWorld = currentNode.getBlocksWorld();
-//
-//                System.out.println("whe have gotten to the final position in: " + i + " moves");
-//
-//                for (int j = 0; j< blocksWorld.length; j++){
-//                    System.out.println(blocksWorld[j]);
-//                }
-//
-//                break;
-//            } else {
-//
-//                // get a set of directions to move the agent
-//
-//                char[] moveDirections = randomDirection();
-//
-//                // apply each direction to the start Node
-//
-//                /**
-//
-//                 This is the stuff to actually do the stuff
-//
-//                for (char direction : moveDirections) {
-//                    StateNode n = new StateNode(currentNode.getBlocksWorld(), currentNode.getAgentPosition(),
-//                            currentNode.getaPosition(), currentNode.getbPosition(), currentNode.getcPosition());
-//                    // add each new board state to the Fifo list (tree)
-//                    if (n.moveAgent(direction)) {
-//                        tree.addConfig(n);
-//                    } else {
-//                        // work out what to do if it does not work, this will be due to the move taking the agent of the board
-//                    }
-//
-//                    // then remove the first elemetn from the tree (list)
-//                    //tree.removeUsedNode();
-//
-//
-//                }
-//                */
-//
-//
-//            }
-//
-//
-//        }
-//
-//
-//    }
-
 
     public void start(){
 
@@ -188,10 +115,40 @@ public class BFS {
                 // get the list of possible other directions
                 char[] directions = randomDirection();
                 // for each direction create a new node and check if it can be moved in that direction
+
+
+                // for testing
+
+                if (nodesExpanded < 30){
+                    char[][] blocksWorld = node.getBlocksWorld();
+                    System.out.println("the parent node");
+                    for (int j = 0; j < blocksWorld.length; j++) {
+                        System.out.println(blocksWorld[j]);
+                    }
+                }
                 for(char direction: directions){
-                    StateNode childNode = new StateNode(node, node.getBoardSize(), node.getaPosition(), node.getbPosition(), node.getcPosition(), node.getAgentPosition());
+
+                    if (nodesExpanded < 30) {
+                        System.out.println("child node direction: " + direction);
+                    }
+
+                    int[] aPosition = Arrays.copyOf(node.getaPosition(), node.getaPosition().length);
+                    int[] bPosition = Arrays.copyOf(node.getbPosition(), node.getbPosition().length);
+                    int[] cPosition = Arrays.copyOf(node.getcPosition(), node.getcPosition().length);
+                    int[] agentPosition = Arrays.copyOf(node.getAgentPosition(), node.getAgentPosition().length);
+
+                    StateNode childNode = new StateNode(node, node.getBoardSize(), aPosition,
+                            bPosition, cPosition, agentPosition);
                     // if yes add them to the states children and add them to the tree
                     if (childNode.moveAgent(direction)){
+
+                        if (nodesExpanded < 30){
+                            char[][] blocksWorld = childNode.getBlocksWorld();
+                            for (int j = 0; j < blocksWorld.length; j++) {
+                                System.out.println(blocksWorld[j]);
+                            }
+                        }
+
                         node.addChild(childNode);
                         tree.addConfig(childNode);
                     }
@@ -201,6 +158,8 @@ public class BFS {
                 //
 
             }
+
+            nodesExpanded++;
         }
 
     }

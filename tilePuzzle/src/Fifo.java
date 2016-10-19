@@ -18,7 +18,7 @@ public class Fifo {
     public void addConfig(StateNode node){
         this.nodesArray.add(node);
 
-        System.out.println(nodesArray.size());
+        //System.out.println(nodesArray.size());
 
 
     }
