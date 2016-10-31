@@ -28,14 +28,6 @@ public class BFS {
         start();
 
 
-//        char[][] blockworld = finalState.getBlocksWorld();
-//
-//        System.out.println("[[[[[");
-//        for (int i = 0; i < blockworld.length; i++){
-//            System.out.println(blockworld[i]);
-      //  }
-
-
 
     }
 

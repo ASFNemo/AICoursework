@@ -27,13 +27,56 @@ public class StateNode {
 
     char[][] blocksWorld;
 
+    int nodeDepth;
+
     public StateNode(StateNode parent, int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
 
         /**
             Use this constructor when you are creating the initial and final state
          */
 
+        createNode(parent, boardSizeN, TAPosition, TBPosition, TCPosition, agentsPostion);
 
+
+
+    }
+
+    public StateNode(StateNode parent, int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion, int depth){
+
+        /**
+         Use this constructor when you are creating the initial and final state
+         */
+
+        createNode(parent, boardSizeN, TAPosition, TBPosition, TCPosition, agentsPostion);
+
+        this.nodeDepth = depth;
+
+    }
+
+    // add another constructor that only takes the matrix and the current agent position.
+
+
+//    public StateNode(StateNode parent, char[][] blocksWorld, int[] agentPosition, int[] positionA, int[] positionB, int[] positionC) {
+//        /**
+//         * use this constructor when you are creating subsequent nodes
+//         */
+//
+//        this.parentNode = parent;
+//        children = new ArrayList<>();
+//
+//        this.blocksWorld = blocksWorld;
+//        this.agentPosition = agentPosition;
+//        this.aPosition = positionA;
+//        this.bPosition = positionB;
+//        this.cPosition = positionC;
+//
+////        System.out.println("==========");
+////        for (int i = 0; i < blocksWorld.length; i++){
+////            System.out.println(blocksWorld[i]);
+////        }
+//    }
+
+    private void createNode(StateNode parent, int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
         this.parentNode = parent;
         children = new ArrayList<>();
 
@@ -86,29 +129,6 @@ public class StateNode {
             System.exit(0);
         }
     }
-
-    // add another constructor that only takes the matrix and the current agent position.
-
-
-//    public StateNode(StateNode parent, char[][] blocksWorld, int[] agentPosition, int[] positionA, int[] positionB, int[] positionC) {
-//        /**
-//         * use this constructor when you are creating subsequent nodes
-//         */
-//
-//        this.parentNode = parent;
-//        children = new ArrayList<>();
-//
-//        this.blocksWorld = blocksWorld;
-//        this.agentPosition = agentPosition;
-//        this.aPosition = positionA;
-//        this.bPosition = positionB;
-//        this.cPosition = positionC;
-//
-////        System.out.println("==========");
-////        for (int i = 0; i < blocksWorld.length; i++){
-////            System.out.println(blocksWorld[i]);
-////        }
-//    }
 
 
     public boolean moveAgent(char direction){
@@ -215,5 +235,17 @@ public class StateNode {
 
     public boolean iscBlockInUse() {
         return cBlockInUse;
+    }
+
+    public int getNodeDepth() {
+        return nodeDepth;
+    }
+
+    public StateNode getParentNode() {
+        return parentNode;
+    }
+
+    public ArrayList<StateNode> getChildren() {
+        return children;
     }
 }

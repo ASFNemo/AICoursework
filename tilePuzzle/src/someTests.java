@@ -11,12 +11,13 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-         test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
+        //test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
         //test.randomDirection();
         //test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
+        test.iddfs();
 
     }
 
@@ -211,6 +212,10 @@ public class someTests {
         StateNode state = new StateNode(null, boardSize, a, b, c, s);
 
         return state;
+    }
+
+    public void iddfs(){
+        IDDFS iterative = new IDDFS(3);
     }
 
 

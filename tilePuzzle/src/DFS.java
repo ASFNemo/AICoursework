@@ -76,6 +76,7 @@ public class DFS {
     }
 
     public void startSearch(){
+        ArrayList<Character> allMoves = new ArrayList<>();
         int moves = 0;
         while(true){
             // take the next element from the tree
@@ -108,6 +109,8 @@ public class DFS {
                     System.out.println(blocksWorld[j]);
                 }
 
+                System.out.println(allMoves);
+
                 break;
             } else {
                 //if no
@@ -129,6 +132,7 @@ public class DFS {
                         currentNode.addChild(node);
                         tree.addNode(node);
                         canMove = true;
+                        allMoves.add(direction);
                     }
                     // if cannot move, repeat until one is accepted
                     // if move is accepted add to the queue

@@ -23,4 +23,9 @@ public class Lifo {
         return this.nodesArray.get(0);
     }
 
+    public boolean isEmpty(){
+        return nodesArray.isEmpty();
+    }
+
+
 }
