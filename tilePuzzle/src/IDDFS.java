@@ -85,7 +85,7 @@ public class IDDFS {
 
         while (!nodeFound){
             // check if tree is empty
-            if (tree.isEmpty()){
+            if (!tree.isEmpty()){
                 // if yes, do all the stuff,
 
                 // get current node
@@ -123,6 +123,10 @@ public class IDDFS {
                     }
                     break;
                 } else {
+
+
+
+
                     // else check if curren node depth is less than max depth
                     if (currentNode.getNodeDepth() < maxdeapth){
                         // if yes pass
@@ -147,7 +151,7 @@ public class IDDFS {
                             // find its children and check if you can move there
                             if (childNode.moveAgent(moveTo)){
                                 // if you  can move there, add them to the tree
-                                tree.addNode(currentNode);
+                                tree.addNode(childNode);
                             }
 
                         }
