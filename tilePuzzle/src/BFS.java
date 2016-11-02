@@ -91,7 +91,7 @@ public class BFS {
             // if yes - print that it is in final state and how many expanded nodes it took
             if ((node.getaPosition()[0] == finalAPosition[0] && node.getaPosition()[1] == finalAPosition[1]) &&
                     ((node.getbPosition()[0] == finalBPosition[0] && node.getbPosition()[1] == finalBPosition[1]) || !node.isbBlockInUse()) &&
-                    (node.getcPosition() == finalCPosition || !node.iscBlockInUse())) {
+                    ((node.getcPosition()[0] == finalCPosition[0] && node.getcPosition()[1] == finalCPosition[1])|| !node.iscBlockInUse())) {
                 // end and report how many nodes where expanded
                 char[][] blocksWorld = node.getBlocksWorld();
 

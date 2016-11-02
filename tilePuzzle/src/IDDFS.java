@@ -115,9 +115,10 @@ public class IDDFS {
                     // if it is the final state, set nodeFound to true, return the node and how many moves it did
                     nodeFound = true;
 
-                    // if yes - print the final Node, how many nodes were searched and finish the system
+                    //if yes - print the final Node, how many nodes were searched and finish the system
                     char[][] blocksWorld = currentNode.getBlocksWorld();
-                    //System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
+                    System.out.println("Depth first search has been able to complete the puzzle in: " + nodesExpanded + " moves!");
+                    System.out.println("the search went to a depth of " + maxdeapth);
                     for (int j = 0; j< blocksWorld.length; j++){
                         System.out.println(blocksWorld[j]);
                     }
@@ -167,6 +168,7 @@ public class IDDFS {
             } else {
                 // otherwise increment max tree depth
                 maxdeapth++;
+                System.out.println(maxdeapth);
             }
 
 

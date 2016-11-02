@@ -13,11 +13,11 @@ public class someTests {
         //test.arraylist();
         //test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
         //test.randomDirection();
-        //test.DFS();
+        test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
-        test.iddfs();
+        //test.iddfs();
 
     }
 
@@ -75,7 +75,7 @@ public class someTests {
 
     public void BFS(){
 
-        BFS search = new BFS(3);
+        BFS search = new BFS(4);
 
 
     }
@@ -161,7 +161,7 @@ public class someTests {
     }
 
     public void DFS(){
-        DFS search = new DFS(3);
+        DFS search = new DFS(6);
     }
 
     public void IfFinalRecognized(){
@@ -215,7 +215,7 @@ public class someTests {
     }
 
     public void iddfs(){
-        IDDFS iterative = new IDDFS(3);
+        IDDFS iterative = new IDDFS(2);
     }
 
 

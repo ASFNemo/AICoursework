@@ -101,7 +101,7 @@ public class DFS {
             // check if the Node is equal to final Node
             if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
                     ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-                    (currentNode.getcPosition() == finalCPosition || !currentNode.iscBlockInUse())){
+                    ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1])|| !currentNode.iscBlockInUse())){
                 // if yes - print the final Node, how many nodes were searched and finish the system
                 char[][] blocksWorld = currentNode.getBlocksWorld();
                 System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
