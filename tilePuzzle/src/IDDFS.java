@@ -101,6 +101,7 @@ public class IDDFS {
                     System.out.println("b-position: " + currentNode.bPosition[0] +"," + currentNode.bPosition[1]);
                     System.out.println("c-position: " + currentNode.cPosition[0] +"," + currentNode.cPosition[1]);
                     System.out.println("agent-position: " + currentNode.agentPosition[0] +"," + currentNode.agentPosition[1]);
+                    System.out.println("node depth : " + currentNode.getNodeDepth());
                     System.out.println();
                     for (int j = 0; j < blocksWorld.length; j++) {
                         System.out.println(blocksWorld[j]);
@@ -110,15 +111,15 @@ public class IDDFS {
                 //check if it is a final state
                 if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
                         ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-                        (currentNode.getcPosition() == finalCPosition || !currentNode.iscBlockInUse())) {
+                        ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1])|| !currentNode.iscBlockInUse())) {
 
                     // if it is the final state, set nodeFound to true, return the node and how many moves it did
-                    nodeFound = true;
+                    //nodeFound = true;
 
                     //if yes - print the final Node, how many nodes were searched and finish the system
                     char[][] blocksWorld = currentNode.getBlocksWorld();
                     System.out.println("Depth first search has been able to complete the puzzle in: " + nodesExpanded + " moves!");
-                    System.out.println("the search went to a depth of " + maxdeapth);
+                    System.out.println("the search went to a depth of " + currentNode.getNodeDepth());
                     for (int j = 0; j< blocksWorld.length; j++){
                         System.out.println(blocksWorld[j]);
                     }
