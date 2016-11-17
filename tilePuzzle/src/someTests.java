@@ -11,14 +11,14 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-        test.BFS();
+        //test.BFS();
         //test.randomDirection();
         //test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
-//        test.AStar();
+        test.AStar();
 
     }
 
@@ -75,6 +75,8 @@ public class someTests {
     }
 
     public void BFS(){
+
+        //TODO work out why the end finishes in a funny place
 
         SearchAlgorithms SABFS = new SearchAlgorithms(4);
         SABFS.startBFS();
@@ -220,11 +222,14 @@ public class someTests {
     }
 
     public void iddfs(){
-        IDDFS iterative = new IDDFS(4);
+
+        SearchAlgorithms SAIDDFS = new SearchAlgorithms(4);
+        SAIDDFS.startIDDFS();
     }
 
     public void AStar(){
-        AStar search = new AStar(4);
+        SearchAlgorithms SAAS = new SearchAlgorithms(4);
+        SAAS.startAStar();
     }
 
 
