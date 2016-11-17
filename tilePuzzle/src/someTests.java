@@ -11,14 +11,14 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-        //test.BFS(); // sort this one out, I am close but need to work out why it is returning false.
+        test.BFS();
         //test.randomDirection();
         //test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
-        test.AStar();
+//        test.AStar();
 
     }
 
@@ -76,7 +76,10 @@ public class someTests {
 
     public void BFS(){
 
-        BFS search = new BFS(3);
+        SearchAlgorithms SABFS = new SearchAlgorithms(4);
+        SABFS.startBFS();
+
+
 
 
     }
@@ -162,7 +165,8 @@ public class someTests {
     }
 
     public void DFS(){
-        DFS search = new DFS(6);
+        SearchAlgorithms SADFS = new SearchAlgorithms(4);
+        SADFS.startDFS();
     }
 
     public void IfFinalRecognized(){
@@ -222,6 +226,8 @@ public class someTests {
     public void AStar(){
         AStar search = new AStar(4);
     }
+
+
 
 
 }
