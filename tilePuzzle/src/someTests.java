@@ -17,7 +17,8 @@ public class someTests {
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
-        test.iddfs();
+        //test.iddfs();
+        test.AStar();
 
     }
 
@@ -75,7 +76,7 @@ public class someTests {
 
     public void BFS(){
 
-        BFS search = new BFS(4);
+        BFS search = new BFS(3);
 
 
     }
@@ -215,7 +216,11 @@ public class someTests {
     }
 
     public void iddfs(){
-        IDDFS iterative = new IDDFS(3);
+        IDDFS iterative = new IDDFS(4);
+    }
+
+    public void AStar(){
+        AStar search = new AStar(4);
     }
 
 

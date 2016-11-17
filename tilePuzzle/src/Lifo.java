@@ -27,5 +27,9 @@ public class Lifo {
         return nodesArray.isEmpty();
     }
 
+    public void clearTree(){
+        this.nodesArray.clear();
+    }
+
 
 }

@@ -7,6 +7,7 @@ import java.util.Random;
  */
 public class IDDFS {
 
+    StateNode startNode;
     StateNode finalState;
 
     int boardSize;
@@ -22,7 +23,7 @@ public class IDDFS {
         tree = new Lifo();
         createFinalPosition(size);
 
-        StateNode startNode = createStartNode(size);
+        this.startNode = createStartNode(size);
         tree.addNode(startNode);
         startSearch();
     }
@@ -132,7 +133,6 @@ public class IDDFS {
                     // else check if curren node depth is less than max depth
                     if (currentNode.getNodeDepth() < maxdeapth){
                         // if yes pass
-                    } else {
                         char[] move = randomDirection();
 
                         for (char moveTo: move) {
@@ -145,10 +145,11 @@ public class IDDFS {
                             int[] bPosition = Arrays.copyOf(currentNode.getbPosition(), currentNode.getbPosition().length);
                             int[] cPosition = Arrays.copyOf(currentNode.getcPosition(), currentNode.getcPosition().length);
                             int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
+                            int nodeDepth = currentNode.getNodeDepth();
 
 
                             StateNode childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
-                                    bPosition, cPosition, agentPosition, (currentNode.getNodeDepth() +1));
+                                    bPosition, cPosition, agentPosition, (nodeDepth +1));
 
                             // find its children and check if you can move there
                             if (childNode.moveAgent(moveTo)){
@@ -159,6 +160,11 @@ public class IDDFS {
                         }
 
                         nodesExpanded++;
+                    } else {
+
+                        tree.clearTree();
+                        tree.addNode(this.startNode);
+                        maxdeapth++;
 
                     }
 

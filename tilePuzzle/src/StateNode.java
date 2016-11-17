@@ -20,6 +20,9 @@ public class StateNode {
     int[] cPosition;
     int[] agentPosition;
 
+    int currentCost = 0;
+    int projectedCost = 0;
+
     int boardSize;
 
     boolean bBlockInUse = false;
@@ -247,5 +250,24 @@ public class StateNode {
 
     public ArrayList<StateNode> getChildren() {
         return children;
+    }
+
+    public int getCurrentCost() {
+        return currentCost;
+    }
+
+    public void setCurrentCost(int currentCost) {
+        this.currentCost = currentCost;
+    }
+
+    public void incrementCost(){
+        this.currentCost = this.currentCost + 1;
+    }
+
+    public int cost(int cCost, int pCost){
+        this.currentCost = cCost;
+        this.projectedCost = pCost;
+
+        return (cCost + pCost);
     }
 }
