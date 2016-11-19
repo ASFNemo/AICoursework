@@ -11,14 +11,14 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-        //test.BFS();
+        test.BFS();
         //test.randomDirection();
         //test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
-        test.AStar();
+        //test.AStar();
 
     }
 
@@ -78,7 +78,7 @@ public class someTests {
 
         //TODO work out why the end finishes in a funny place
 
-        SearchAlgorithms SABFS = new SearchAlgorithms(4);
+        SearchAlgorithms SABFS = new SearchAlgorithms(3);
         SABFS.startBFS();
 
 
