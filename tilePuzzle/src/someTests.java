@@ -11,14 +11,14 @@ public class someTests {
 
         //test.stateNode();
         //test.arraylist();
-        test.BFS();
+        //test.BFS();
         //test.randomDirection();
         //test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
-        //test.AStar();
+        test.AStar();
 
     }
 

@@ -382,6 +382,8 @@ public class SearchAlgorithms {
             if (nodesExpanded < 100 || nodesExpanded == 1000 || nodesExpanded == 10000){
                 System.out.println("node number: " + nodesExpanded);
                 char[][] blocksWorld = currentNode.getBlocksWorld();
+                System.out.println("the previous cost is: " + currentNode.getCurrentCost());
+                System.out.println("total cost: " + (currentCheapest + currentNode.getCurrentCost()));
                 System.out.println("the cost is: " + currentCheapest);
                 for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
@@ -406,6 +408,10 @@ public class SearchAlgorithms {
 
             //once we have the cheapes node
             // expand and get all potential children direction
+
+            // TODO CHANGE THIS TO HEURISTIC USING MANHATTAN DISTANCE --- H1(n) + H2(n)
+            // H1(n) --> the number of tiles that are not in the final state
+            // H2(n) --> the total for how many steps it would take for each tile to get to its final position.
 
             char[] directions = randomDirection();
             for (char direction : directions) {
@@ -445,6 +451,10 @@ public class SearchAlgorithms {
     }
 
 
+//    public int h1n(){
+//
+//    }
+
 
 
     public int futureCost(int[] currentA, int[] currentB, int[] currentC, int[] currentAgent){
@@ -452,18 +462,18 @@ public class SearchAlgorithms {
 
         int cost1 = Math.abs(currentA[0] - finalAPosition[0]) + Math.abs(currentA[1] - finalAPosition[1]);
         int cost2 = Math.abs(currentB[0] - finalBPosition[0]) + Math.abs(currentB[1] - finalBPosition[1]);
-        int cost3 = Math.abs(currentC[0] = finalCPosition[0]) + Math.abs(currentC[1] - finalCPosition[1]);
-
-        if (cost1 == 0 && cost2 == 0){
-            // distance from c
-            cost = Math.abs(finalCPosition[0] - currentAgent[0]) + Math.abs(finalCPosition[1] - currentAgent[1]);
-        } else if (cost1 == 0 && cost3 == 0){
-            // distance from b
-            cost = Math.abs(finalBPosition[0] - currentAgent[0]) + Math.abs(finalBPosition[1] - currentAgent[1]);
-        } else if (cost2 == 0 &&  cost3 == 0){
-            // distance from a
-            cost = Math.abs(finalAPosition[0] - currentAgent[0]) + Math.abs(finalAPosition[1] - currentAgent[1]);
-        }
+        int cost3 = Math.abs(currentC[0] - finalCPosition[0]) + Math.abs(currentC[1] - finalCPosition[1]);
+//
+//        if (cost1 == 0 && cost2 == 0){
+//            // distance from c
+//            cost = Math.abs(finalCPosition[0] - currentAgent[0]) + Math.abs(finalCPosition[1] - currentAgent[1]);
+//        } else if (cost1 == 0 && cost3 == 0){
+//            // distance from b
+//            cost = Math.abs(finalBPosition[0] - currentAgent[0]) + Math.abs(finalBPosition[1] - currentAgent[1]);
+//        } else if (cost2 == 0 &&  cost3 == 0){
+//            // distance from a
+//            cost = Math.abs(finalAPosition[0] - currentAgent[0]) + Math.abs(finalAPosition[1] - currentAgent[1]);
+//        }
 
         cost = cost + cost1 + cost2 + cost3;
 
