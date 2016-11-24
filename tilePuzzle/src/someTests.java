@@ -18,7 +18,8 @@ public class someTests {
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
-        test.AStar();
+        //test.AStar();
+        test.xBlockAssignment();
 
     }
 
@@ -231,6 +232,10 @@ public class someTests {
         SAAS.startAStar();
     }
 
+    public void xBlockAssignment(){
+        SearchAlgorithms xbTest = new SearchAlgorithms(4, 2);
+        xbTest.startBFS();
+    }
 
 
 

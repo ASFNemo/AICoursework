@@ -7,14 +7,37 @@ public class SearchAlgorithms {
     StateNode finalState;
 
     int boardSize;
+    int numXTiles;
 
     int[] finalAPosition;
     int[] finalBPosition;
     int[] finalCPosition;
+    int[][] xPositions; // TODO: MAKE SURE THAT ALL NODES ARE USING THE SAME XPOSITIONS
+
+    boolean xPositionUsed;
+
+
 
     public SearchAlgorithms(int size){
         this.boardSize = size;
         createFinalPosition(size);
+
+        this.xPositionUsed = false;
+    }
+
+    public SearchAlgorithms(int size, int numXTiles){
+        this.boardSize = size;
+        this.numXTiles = numXTiles;
+
+        createFinalPositionWithX(size, numXTiles);
+
+        this.xPositionUsed = true;
+
+    }
+
+    public SearchAlgorithms(int size, int[][] Xpositions){
+
+        this.xPositionUsed = true;
     }
 
 
@@ -30,6 +53,21 @@ public class SearchAlgorithms {
         this.finalAPosition = finalState.getaPosition();
         this.finalBPosition = finalState.getbPosition();
         this.finalCPosition = finalState.getcPosition();
+    }
+
+    public void createFinalPositionWithX(int size, int numXTiles){
+        int[] finalAPosition = whereToPutA(size);
+        int[] finalBPosition = whereToPutB(size);
+        int[] finalCPosition = {(boardSize - 1), 1};
+
+        int[] finalAgentPosition = {(boardSize -1), (boardSize -1)};
+
+        finalState = new StateNode(null, size, numXTiles, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition, 0);
+
+        this.finalAPosition = finalState.getaPosition();
+        this.finalBPosition = finalState.getbPosition();
+        this.finalCPosition = finalState.getcPosition();
+        this.xPositions = finalState.getxPositions();
     }
 
     public int[] whereToPutA(int size){
@@ -66,19 +104,38 @@ public class SearchAlgorithms {
 
     }
 
+    public StateNode createStartNodeWithx(int size, int[][] xPositions){
+        int[] a = {(size -1), 0};
+        int[] b = {(size -1), 1};
+        int[] c = {(size -1), 2};
+        int[] s = {(size -1), (size - 1)};
+
+        return new StateNode(null, size, xPositions, a, b, c, s, 0);
+    }
 
 
 
-    public void startDFS(){
+
+    public void startDFS() {
 
         Lifo tree;
         tree = new Lifo();
-        StateNode startNode = createStartNode(this.boardSize);
+
+
+
+        StateNode startNode;
+
+        if (!this.xPositionUsed) {
+            startNode = createStartNode(this.boardSize);
+        } else {
+            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+        }
+
         tree.addNode(startNode);
 
         ArrayList<Character> allMoves = new ArrayList<>();
         int moves = 0;
-        while(true){
+        while (true) {
             // take the next element from the tree
             StateNode currentNode = tree.getNode();
 
@@ -88,10 +145,10 @@ public class SearchAlgorithms {
 
 
                 System.out.println("Node: " + moves);
-                System.out.println("a position: " + currentNode.aPosition[0] +"," + currentNode.aPosition[1]);
-                System.out.println("b position: " + currentNode.bPosition[0] +"," + currentNode.bPosition[1]);
-                System.out.println("c position: " + currentNode.cPosition[0] +"," + currentNode.cPosition[1]);
-                System.out.println("agent position: " + currentNode.agentPosition[0] +"," + currentNode.agentPosition[1]);
+                System.out.println("a position: " + currentNode.aPosition[0] + "," + currentNode.aPosition[1]);
+                System.out.println("b position: " + currentNode.bPosition[0] + "," + currentNode.bPosition[1]);
+                System.out.println("c position: " + currentNode.cPosition[0] + "," + currentNode.cPosition[1]);
+                System.out.println("agent position: " + currentNode.agentPosition[0] + "," + currentNode.agentPosition[1]);
                 System.out.println();
                 for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
@@ -101,11 +158,11 @@ public class SearchAlgorithms {
             // check if the Node is equal to final Node
             if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
                     ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-                    ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1])|| !currentNode.iscBlockInUse())){
+                    ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1]) || !currentNode.iscBlockInUse())) {
                 // if yes - print the final Node, how many nodes were searched and finish the system
                 char[][] blocksWorld = currentNode.getBlocksWorld();
                 System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
-                for (int j = 0; j< blocksWorld.length; j++){
+                for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
                 }
 
@@ -115,8 +172,15 @@ public class SearchAlgorithms {
             } else {
                 //if no
 
-                StateNode node = new StateNode(currentNode, currentNode.boardSize, currentNode.aPosition,
-                        currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition);
+                StateNode node;
+
+                if (!this.xPositionUsed) {
+                    node = new StateNode(currentNode, currentNode.boardSize, currentNode.aPosition,
+                            currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition, (currentNode.nodeDepth +1));
+                } else {
+                    node = new StateNode(currentNode, currentNode.boardSize, currentNode.getxPositions(), currentNode.aPosition,
+                            currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition, (currentNode.nodeDepth + 1));
+                }
 
                 boolean canMove = false;
                 while (!canMove) {
@@ -124,11 +188,11 @@ public class SearchAlgorithms {
                     char direction = getDirection();
                     boolean didMove = node.moveAgent(direction);
 
-                    if (moves < 100){
+                    if (moves < 100) {
                         System.out.println("direction: " + direction + " did move? " + didMove);
                     }
 
-                    if (didMove){
+                    if (didMove) {
                         currentNode.addChild(node);
                         tree.addNode(node);
                         canMove = true;
@@ -139,18 +203,24 @@ public class SearchAlgorithms {
                 }
 
 
-
             }
             moves++;
         }
     }
 
 
+
+
     public void startBFS(){
 
         Fifo tree;
         tree = new Fifo();
-        StateNode startNode = createStartNode(this.boardSize);
+        StateNode startNode;
+        if (!this.xPositionUsed) {
+            startNode = createStartNode(this.boardSize);
+        } else {
+            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+        }
         tree.addConfig(startNode);
 
         int nodesExpanded = 0;
@@ -204,8 +274,16 @@ public class SearchAlgorithms {
                     int[] cPosition = Arrays.copyOf(node.getcPosition(), node.getcPosition().length);
                     int[] agentPosition = Arrays.copyOf(node.getAgentPosition(), node.getAgentPosition().length);
 
-                    StateNode childNode = new StateNode(node, node.getBoardSize(), aPosition,
-                            bPosition, cPosition, agentPosition);
+                    StateNode childNode;
+
+                    if (!this.xPositionUsed) {
+                       childNode = new StateNode(node, node.getBoardSize(), aPosition,
+                                bPosition, cPosition, agentPosition);
+                    }  else {
+                        childNode = new StateNode(node, node.getBoardSize(),node.getxPositions(), aPosition,
+                                bPosition, cPosition, agentPosition, 0);
+                    }
+
                     // if yes add them to the states children and add them to the tree
                     if (childNode.moveAgent(direction)){
 
@@ -234,7 +312,12 @@ public class SearchAlgorithms {
 
         Lifo tree;
         tree = new Lifo();
-        StateNode startNode = createStartNode(this.boardSize);
+        StateNode startNode;
+        if (!this.xPositionUsed) {
+            startNode = createStartNode(this.boardSize);
+        } else {
+            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+        }
         tree.addNode(startNode);
 
         int maxdeapth = 0;
@@ -305,9 +388,14 @@ public class SearchAlgorithms {
                             int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
                             int nodeDepth = currentNode.getNodeDepth();
 
-
-                            StateNode childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
-                                    bPosition, cPosition, agentPosition, (nodeDepth +1));
+                            StateNode childNode;
+                            if (!this.xPositionUsed) {
+                                childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
+                                        bPosition, cPosition, agentPosition, (nodeDepth +1));
+                            }  else {
+                                childNode = new StateNode(currentNode, currentNode.getBoardSize(),currentNode.getxPositions(), aPosition,
+                                        bPosition, cPosition, agentPosition, (nodeDepth + 1));
+                            }
 
                             // find its children and check if you can move there
                             if (childNode.moveAgent(moveTo)){
@@ -349,7 +437,12 @@ public class SearchAlgorithms {
 
         HashMap<StateNode, Integer > movesMap = new HashMap<>();
 
-        StateNode startNode = createStartNode(this.boardSize);
+        StateNode startNode;
+        if (!this.xPositionUsed) {
+            startNode = createStartNode(this.boardSize);
+        } else {
+            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+        }
         int movesCost = startNode.cost(0, futureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition(), startNode.getAgentPosition()));
         movesMap.put(startNode, movesCost);
 
@@ -423,8 +516,14 @@ public class SearchAlgorithms {
                 int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
                 int ammassedCost = currentNode.getCurrentCost();
 
-                StateNode childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
-                        bPosition, cPosition, agentPosition);
+                StateNode childNode;
+                if (!this.xPositionUsed) {
+                    childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
+                            bPosition, cPosition, agentPosition);
+                }  else {
+                    childNode = new StateNode(currentNode, currentNode.getBoardSize(),currentNode.getxPositions(), aPosition,
+                            bPosition, cPosition, agentPosition, 0);
+                }
                 childNode.setCurrentCost(ammassedCost);
                 // if yes add them to the states children and add them to the tree
                 if (childNode.moveAgent(direction)) {
