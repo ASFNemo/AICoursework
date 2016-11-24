@@ -95,6 +95,8 @@ public class StateNode {
             for (int i = 0; i < boardSizeN; i++) { // this will be to loop through the rows
                 for (int j = 0; j < boardSizeN; j++) { // this if for looping through the columns
 
+                    // TODO ADD THE OPTION OF HAVING X TILES THAT CANNOT BE MOVED. THESE SHOULD BE PASSED IN USING AN ARRAY THAT SHOULD BE CHECKED
+
                     // we check if this tile should be one of the specified, otherwise it becomes a plane tile.
                     if (i == TAPosition[0] && j == TAPosition[1]) {
                         blocksWorld[i][j] = 'a';
@@ -135,6 +137,8 @@ public class StateNode {
 
 
     public boolean moveAgent(char direction){
+
+        // TODO: WHEN THE XTILE HAS BEEN ADDED, CREATE A CHECK THAT THE SMILE TILE ISN'T SWAPPING WITH THAT TILE.
 
         boolean couldComplete;
 

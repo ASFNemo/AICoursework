@@ -76,9 +76,8 @@ public class someTests {
 
     public void BFS(){
 
-        //TODO work out why the end finishes in a funny place
 
-        SearchAlgorithms SABFS = new SearchAlgorithms(3);
+        SearchAlgorithms SABFS = new SearchAlgorithms(4);
         SABFS.startBFS();
 
 
@@ -231,6 +230,8 @@ public class someTests {
         SearchAlgorithms SAAS = new SearchAlgorithms(4);
         SAAS.startAStar();
     }
+
+
 
 
 

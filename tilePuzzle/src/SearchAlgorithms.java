@@ -463,6 +463,10 @@ public class SearchAlgorithms {
         int cost1 = Math.abs(currentA[0] - finalAPosition[0]) + Math.abs(currentA[1] - finalAPosition[1]);
         int cost2 = Math.abs(currentB[0] - finalBPosition[0]) + Math.abs(currentB[1] - finalBPosition[1]);
         int cost3 = Math.abs(currentC[0] - finalCPosition[0]) + Math.abs(currentC[1] - finalCPosition[1]);
+
+//        double cost1 = Math.sqrt(Math.pow(Math.abs(currentA[0] - finalAPosition[0]), 2) + Math.pow(Math.abs(currentA[1] - finalAPosition[1]), 2));
+//      double cost2 = Math.sqrt(Math.pow(Math.abs(currentB[0] - finalBPosition[0]), 2) + Math.pow(Math.abs(currentB[1] - finalBPosition[1]), 2));
+//      double cost3 = Math.sqrt(Math.pow(Math.abs(currentC[0] - finalCPosition[0]), 2) + Math.pow(Math.abs(currentC[1] - finalCPosition[1]), 2));
 //
 //        if (cost1 == 0 && cost2 == 0){
 //            // distance from c
@@ -476,6 +480,8 @@ public class SearchAlgorithms {
 //        }
 
         cost = cost + cost1 + cost2 + cost3;
+
+
 
         return cost;
 
