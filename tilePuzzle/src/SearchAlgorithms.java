@@ -1,3 +1,4 @@
+import javax.xml.soap.Node;
 import java.util.*;
 
 /**
@@ -12,7 +13,7 @@ public class SearchAlgorithms {
     int[] finalAPosition;
     int[] finalBPosition;
     int[] finalCPosition;
-    int[][] xPositions; // TODO: MAKE SURE THAT ALL NODES ARE USING THE SAME XPOSITIONS
+    int[][] xPositions;
 
     boolean xPositionUsed;
 
@@ -29,14 +30,15 @@ public class SearchAlgorithms {
         this.boardSize = size;
         this.numXTiles = numXTiles;
 
-        createFinalPositionWithX(size, numXTiles);
+        createFinalPositionWithXUndefined(size, numXTiles);
 
         this.xPositionUsed = true;
 
     }
 
     public SearchAlgorithms(int size, int[][] Xpositions){
-
+        this.numXTiles = xPositions.length;
+        createFinalPositionWithXDefined(size, xPositions);
         this.xPositionUsed = true;
     }
 
@@ -55,7 +57,7 @@ public class SearchAlgorithms {
         this.finalCPosition = finalState.getcPosition();
     }
 
-    public void createFinalPositionWithX(int size, int numXTiles){
+    public void createFinalPositionWithXUndefined(int size, int numXTiles){
         int[] finalAPosition = whereToPutA(size);
         int[] finalBPosition = whereToPutB(size);
         int[] finalCPosition = {(boardSize - 1), 1};
@@ -68,6 +70,28 @@ public class SearchAlgorithms {
         this.finalBPosition = finalState.getbPosition();
         this.finalCPosition = finalState.getcPosition();
         this.xPositions = finalState.getxPositions();
+    }
+
+    public void createFinalPositionWithXDefined(int size, int[][] xPositions){
+        int[] finalAPosition = whereToPutA(size);
+        int[] finalBPosition = whereToPutB(size);
+        int[] finalCPosition = {(boardSize - 1), 1};
+
+        for (int i = 0; i < xPositions.length; i++){
+            if (Arrays.equals(xPositions[i], finalAPosition) || Arrays.equals(finalBPosition, xPositions[i])
+                    || Arrays.equals(xPositions[i], finalCPosition) || xPositions[i][0] == (size -1)){
+                // todo: remove the element from the ARRAy!!!
+            }
+        }
+
+        int[] finalAgentPosition = {(boardSize -1), (boardSize -1)};
+
+        finalState = new StateNode(null, size, numXTiles, finalAPosition, finalBPosition, finalCPosition, finalAgentPosition, 0);
+
+        this.finalAPosition = finalState.getaPosition();
+        this.finalBPosition = finalState.getbPosition();
+        this.finalCPosition = finalState.getcPosition();
+        this.xPositions = xPositions;
     }
 
     public int[] whereToPutA(int size){
@@ -100,7 +124,7 @@ public class SearchAlgorithms {
 
         int[] s = {(size -1), (size - 1)};
 
-        return new StateNode(null, size, a, b, c, s);
+        return new StateNode(null, size, a, b, c, s, 0);
 
     }
 
@@ -116,7 +140,7 @@ public class SearchAlgorithms {
 
 
 
-    public void startDFS() {
+    public StateNode startDFS() {
 
         Lifo tree;
         tree = new Lifo();
@@ -124,6 +148,8 @@ public class SearchAlgorithms {
 
 
         StateNode startNode;
+
+        StateNode finalNode;
 
         if (!this.xPositionUsed) {
             startNode = createStartNode(this.boardSize);
@@ -166,6 +192,7 @@ public class SearchAlgorithms {
                     System.out.println(blocksWorld[j]);
                 }
 
+                finalNode = currentNode;
                 System.out.println(allMoves);
 
                 break;
@@ -206,12 +233,13 @@ public class SearchAlgorithms {
             }
             moves++;
         }
+        return finalNode;
     }
 
 
 
 
-    public void startBFS(){
+    public StateNode startBFS(){
 
         Fifo tree;
         tree = new Fifo();
@@ -224,6 +252,7 @@ public class SearchAlgorithms {
         tree.addConfig(startNode);
 
         int nodesExpanded = 0;
+        StateNode finalNode;
 
         while (true){
 
@@ -245,7 +274,7 @@ public class SearchAlgorithms {
                 for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
                 }
-
+                finalNode = node;
                 break;
             } else {
                 // else
@@ -306,248 +335,214 @@ public class SearchAlgorithms {
 
             nodesExpanded++;
         }
+        return finalNode;
     }
 
-    public void startIDDFS(){
 
-        Lifo tree;
-        tree = new Lifo();
+    public StateNode IDDFS(){
         StateNode startNode;
         if (!this.xPositionUsed) {
             startNode = createStartNode(this.boardSize);
         } else {
             startNode = createStartNodeWithx(this.boardSize, this.xPositions);
         }
-        tree.addNode(startNode);
 
-        int maxdeapth = 0;
-        int currentDepth = 0;
-        int nodesExpanded = 0;
-        boolean nodeFound = false;
-
-        while (!nodeFound){
-            // check if tree is empty
-            if (!tree.isEmpty()){
-                // if yes, do all the stuff,
-
-                // get current node
-                StateNode currentNode = tree.getNode();
-
-                if (nodesExpanded < 100 || nodesExpanded == 1500 || nodesExpanded == 15000 || nodesExpanded == 90100 || nodesExpanded == 150000
-                        || nodesExpanded == 2500000 || nodesExpanded == 25000000) {
-                    char[][] blocksWorld = currentNode.getBlocksWorld();
-
-
-                    System.out.println("Node: " + nodesExpanded);
-                    System.out.println("a-position: " + currentNode.aPosition[0] +"," + currentNode.aPosition[1]);
-                    System.out.println("b-position: " + currentNode.bPosition[0] +"," + currentNode.bPosition[1]);
-                    System.out.println("c-position: " + currentNode.cPosition[0] +"," + currentNode.cPosition[1]);
-                    System.out.println("agent-position: " + currentNode.agentPosition[0] +"," + currentNode.agentPosition[1]);
-                    System.out.println("node depth : " + currentNode.getNodeDepth());
-                    System.out.println();
-                    for (int j = 0; j < blocksWorld.length; j++) {
-                        System.out.println(blocksWorld[j]);
-                    }
-                }
-
-                //check if it is a final state
-                if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
-                        ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-                        ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1])|| !currentNode.iscBlockInUse())) {
-
-                    // if it is the final state, set nodeFound to true, return the node and how many moves it did
-                    //nodeFound = true;
-
-                    //if yes - print the final Node, how many nodes were searched and finish the system
-                    char[][] blocksWorld = currentNode.getBlocksWorld();
-                    System.out.println("Depth first search has been able to complete the puzzle in: " + nodesExpanded + " moves!");
-                    System.out.println("the search went to a depth of " + currentNode.getNodeDepth());
-                    for (int j = 0; j< blocksWorld.length; j++){
-                        System.out.println(blocksWorld[j]);
-                    }
-                    break;
-                } else {
+        int i = 0;
 
 
 
+        while (true){
+            StateNode found = DLS(startNode, i);
+            System.out.println("current depth is: " + i);
+            //System.out.println(" I am back from recursion " + i);
 
-                    // else check if curren node depth is less than max depth
-                    if (currentNode.getNodeDepth() < maxdeapth){
-                        // if yes pass
-                        char[] move = randomDirection();
-
-                        for (char moveTo: move) {
-
-                            if (nodesExpanded < 30) {
-                                System.out.println("child node direction: " + moveTo);
-                            }
-
-                            int[] aPosition = Arrays.copyOf(currentNode.getaPosition(), currentNode.getaPosition().length);
-                            int[] bPosition = Arrays.copyOf(currentNode.getbPosition(), currentNode.getbPosition().length);
-                            int[] cPosition = Arrays.copyOf(currentNode.getcPosition(), currentNode.getcPosition().length);
-                            int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
-                            int nodeDepth = currentNode.getNodeDepth();
-
-                            StateNode childNode;
-                            if (!this.xPositionUsed) {
-                                childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
-                                        bPosition, cPosition, agentPosition, (nodeDepth +1));
-                            }  else {
-                                childNode = new StateNode(currentNode, currentNode.getBoardSize(),currentNode.getxPositions(), aPosition,
-                                        bPosition, cPosition, agentPosition, (nodeDepth + 1));
-                            }
-
-                            // find its children and check if you can move there
-                            if (childNode.moveAgent(moveTo)){
-                                // if you  can move there, add them to the tree
-                                tree.addNode(childNode);
-                            }
-
-                        }
-
-                        nodesExpanded++;
-                    } else {
-
-                        tree.clearTree();
-                        tree.addNode(startNode);
-                        maxdeapth++;
-
-                    }
-
-
-                }
-
-
-            } else {
-                // otherwise increment max tree depth
-                maxdeapth++;
-                System.out.println(maxdeapth);
+            if (found != null){
+                //System.out.println("we found something at depth " + i);
+                found.setNodeDepth(i);
+                return found;
             }
-
-
-
-
-
+            //System.out.println("not at this depth");
+            i++;
         }
     }
 
-
-
-    public void startAStar(){
-
-        HashMap<StateNode, Integer > movesMap = new HashMap<>();
-
-        StateNode startNode;
-        if (!this.xPositionUsed) {
-            startNode = createStartNode(this.boardSize);
-        } else {
-            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+    public StateNode DLS(StateNode currentNode, int depth){
+        //System.out.println("here");
+        if (depth == 0 && (currentNode.getaPosition()[0] == finalAPosition[0] &&
+                currentNode.getaPosition()[1] == finalAPosition[1]) &&
+                ((currentNode.getbPosition()[0] == finalBPosition[0] &&
+                        currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse())
+                && ((currentNode.getcPosition()[0] == finalCPosition[0] &&
+                currentNode.getcPosition()[1] == finalCPosition[1]) || !currentNode.iscBlockInUse())){
+            //System.out.println("in the final state");
+            return currentNode;
         }
-        int movesCost = startNode.cost(0, futureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition(), startNode.getAgentPosition()));
-        movesMap.put(startNode, movesCost);
 
-        // this is just to initialize. the first will get changed as soon as we get into the loop
-        StateNode currentNode = movesMap.entrySet().iterator().next().getKey();
-        int currentCheapest = (int) Math.pow(boardSize, Math.pow(boardSize, boardSize));
-        int nodesExpanded  = 0;
-        // while a solution has not been found
-        while (true) {
-            // loop through the list
-            int i = 0;
-            for (Map.Entry<StateNode, Integer> state : movesMap.entrySet()) {
-                if (i == 0) {
-                    currentNode = state.getKey();
-                    currentCheapest = state.getValue();
-                    //movesMap.remove(state.getKey());
-                    i++;
-                }
+        if (depth > 0){
 
+            //System.out.println(" in the depth greater than zero");
 
-                // check which node has the lowest cost, hold it in move node until we have found something cheaper.
-                if (state.getValue() < currentCheapest) {
-                    //movesMap.put(currentNode, currentCheapest);
-                    currentNode = state.getKey();
-                    currentCheapest = state.getValue();
+            char[] move = {'u', 'd', 'l', 'r'};
 
-                }
-            }
-            movesMap.remove(movesMap.remove(currentNode));
-            if (nodesExpanded < 100 || nodesExpanded == 1000 || nodesExpanded == 10000){
-                System.out.println("node number: " + nodesExpanded);
-                char[][] blocksWorld = currentNode.getBlocksWorld();
-                System.out.println("the previous cost is: " + currentNode.getCurrentCost());
-                System.out.println("total cost: " + (currentCheapest + currentNode.getCurrentCost()));
-                System.out.println("the cost is: " + currentCheapest);
-                for (int j = 0; j < blocksWorld.length; j++) {
-                    System.out.println(blocksWorld[j]);
-                }
-            }
-
-            if ((currentNode.getaPosition()[0] == finalAPosition[0] && currentNode.getaPosition()[1] == finalAPosition[1]) &&
-                    ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
-                    ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1]) || !currentNode.iscBlockInUse())) {
-
-                // if it is the final state, set nodeFound to true, return the node and how many moves it did
-                //nodeFound = true;
-
-                //if yes - print the final Node, how many nodes were searched and finish the system
-                char[][] blocksWorld = currentNode.getBlocksWorld();
-                System.out.println("A* search has been able to complete the puzzle in: " + nodesExpanded + " moves!");
-                for (int j = 0; j < blocksWorld.length; j++) {
-                    System.out.println(blocksWorld[j]);
-                }
-                break;
-            }
-
-            //once we have the cheapes node
-            // expand and get all potential children direction
-
-            // TODO CHANGE THIS TO HEURISTIC USING MANHATTAN DISTANCE --- H1(n) + H2(n)
-            // H1(n) --> the number of tiles that are not in the final state
-            // H2(n) --> the total for how many steps it would take for each tile to get to its final position.
-
-            char[] directions = randomDirection();
-            for (char direction : directions) {
-
-
+            for (char moveTO : move){
                 int[] aPosition = Arrays.copyOf(currentNode.getaPosition(), currentNode.getaPosition().length);
                 int[] bPosition = Arrays.copyOf(currentNode.getbPosition(), currentNode.getbPosition().length);
                 int[] cPosition = Arrays.copyOf(currentNode.getcPosition(), currentNode.getcPosition().length);
                 int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
-                int ammassedCost = currentNode.getCurrentCost();
 
-                StateNode childNode;
+                StateNode child;
+
                 if (!this.xPositionUsed) {
-                    childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
-                            bPosition, cPosition, agentPosition);
-                }  else {
-                    childNode = new StateNode(currentNode, currentNode.getBoardSize(),currentNode.getxPositions(), aPosition,
+                    child = new StateNode(currentNode, currentNode.boardSize, aPosition,
                             bPosition, cPosition, agentPosition, 0);
+                } else {
+                    child = new StateNode(currentNode, currentNode.boardSize, currentNode.getxPositions(),
+                            aPosition, bPosition, cPosition, agentPosition, 0);
                 }
-                childNode.setCurrentCost(ammassedCost);
-                // if yes add them to the states children and add them to the tree
-                if (childNode.moveAgent(direction)) {
-                    currentNode.addChild(childNode);
-                    int[] childA = Arrays.copyOf(childNode.getaPosition(), childNode.getaPosition().length);
-                    int[] childB = Arrays.copyOf(childNode.getbPosition(), childNode.getbPosition().length);
-                    int[] childC = Arrays.copyOf(childNode.getcPosition(), childNode.getcPosition().length);
-                    int[] childAgent = Arrays.copyOf(childNode.getAgentPosition(), childNode.getAgentPosition().length);
-                    // increment current cost
-                    childNode.incrementCost();
+                if (child.moveAgent(moveTO)) {
+                    StateNode found = DLS(child, (depth - 1));
 
-                    // for each direction work out the cost of choosing that node
-                    int cost = futureCost(childA, childB, childC, childAgent);
-
-                    //System.out.println("current cost: "  + childNode.getCurrentCost() + ", Future cost: " + cost);
-                    int totalCost = childNode.cost(childNode.getCurrentCost(), cost);
-                    //System.out.println("total cost: " + totalCost);
-                    movesMap.put(childNode, totalCost);
+                    if (found != null){
+                        return found;
+                    }
                 }
+
+
+
             }
-            nodesExpanded++;
+
+
 
         }
+        //System.out.println("about to return null");
+        return null;
     }
+
+
+    public StateNode StartAStar(){
+
+        StateNode finalNode = null;
+        int moves = 0;
+
+        // create a hashmap that takes in a key = total cost and a value = the node
+        HashMap<StateNode, Integer> movesMap = new HashMap<>();
+
+        // create the startNode and add it to the hashmap;
+        StateNode startNode;
+
+        if (!this.xPositionUsed) {
+            startNode = createStartNode(this.boardSize);
+        } else {
+            startNode = createStartNodeWithx(this.boardSize, this.xPositions);
+        }
+
+        // Manhattan Distance
+        //System.out.println("using manhattan distance");
+        //int movesCost = startNode.cost(0, futureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
+        // Hamming
+        System.out.println("using hamming distance");
+        int movesCost = startNode.cost(0, hammingFutureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
+        movesMap.put(startNode, movesCost);
+
+        while (true) {
+            // find the total least expensive node
+            StateNode cheapestMoveNode = getMinKey(movesMap);
+            movesMap.remove(cheapestMoveNode);
+
+
+            // FOR DEBUGGING PURPOSES ONLY, SHOW CURRENT BOARD STATE
+            if (moves < 100 || moves == 1500 || moves == 15000 || moves == 90000 || moves == 150000 || moves == 2500000 || moves == 25000000) {
+                char[][] blocksWorld = cheapestMoveNode.getBlocksWorld();
+
+
+                System.out.println("Node: " + moves);
+                System.out.println("a position: " + cheapestMoveNode.aPosition[0] + "," + cheapestMoveNode.aPosition[1]);
+                System.out.println("b position: " + cheapestMoveNode.bPosition[0] + "," + cheapestMoveNode.bPosition[1]);
+                System.out.println("c position: " + cheapestMoveNode.cPosition[0] + "," + cheapestMoveNode.cPosition[1]);
+                System.out.println("agent position: " + cheapestMoveNode.agentPosition[0] + "," + cheapestMoveNode.agentPosition[1]);
+                System.out.println("curret cost: " + cheapestMoveNode.getNodeDepth());
+
+                for (int j = 0; j < blocksWorld.length; j++) {
+                    System.out.println(blocksWorld[j]);
+                }
+            }
+
+
+
+            // check if the node is the final node
+            if ((cheapestMoveNode.getaPosition()[0] == finalAPosition[0] && cheapestMoveNode.getaPosition()[1] == finalAPosition[1]) &&
+                    ((cheapestMoveNode.getbPosition()[0] == finalBPosition[0] && cheapestMoveNode.getbPosition()[1] == finalBPosition[1]) || !cheapestMoveNode.isbBlockInUse()) &&
+                    ((cheapestMoveNode.getcPosition()[0] == finalCPosition[0] && cheapestMoveNode.getcPosition()[1] == finalCPosition[1]) || !cheapestMoveNode.iscBlockInUse())) {
+                // if yes - print the final Node, how many nodes were searched and finish the system
+                char[][] blocksWorld = cheapestMoveNode.getBlocksWorld();
+                System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
+                for (int j = 0; j < blocksWorld.length; j++) {
+                    System.out.println(blocksWorld[j]);
+                }
+
+                finalNode = cheapestMoveNode;
+                break;
+            } else {
+                // create a 4 children that move in the 4 directions
+
+                char[] move = {'u', 'd', 'l', 'r'};
+
+                for (char moveTo : move) {
+                    int[] aPosition = Arrays.copyOf(cheapestMoveNode.getaPosition(), cheapestMoveNode.getaPosition().length);
+                    int[] bPosition = Arrays.copyOf(cheapestMoveNode.getbPosition(), cheapestMoveNode.getbPosition().length);
+                    int[] cPosition = Arrays.copyOf(cheapestMoveNode.getcPosition(), cheapestMoveNode.getcPosition().length);
+                    int[] agentPosition = Arrays.copyOf(cheapestMoveNode.getAgentPosition(), cheapestMoveNode.getAgentPosition().length);
+
+                    StateNode child;
+
+                    if (!this.xPositionUsed) {
+                        child = new StateNode(cheapestMoveNode, cheapestMoveNode.boardSize, aPosition,
+                                bPosition, cPosition, agentPosition, (cheapestMoveNode.nodeDepth + 1));
+                    } else {
+                        child = new StateNode(cheapestMoveNode, cheapestMoveNode.boardSize, cheapestMoveNode.getxPositions(),
+                                aPosition, bPosition, cPosition, agentPosition, (cheapestMoveNode.nodeDepth + 1));
+                    }
+                    if (child.moveAgent(moveTo)) {
+                        // Manhattan distance
+                        //int cost = child.getNodeDepth() + futureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
+                        // HAMMING DISTANCE
+                        int cost = child.getNodeDepth() + hammingFutureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
+
+                        // the ones that can be moved, find their total cost and add to the tree
+                        movesMap.put(child, cost);
+
+                    }
+
+
+                }
+
+            }
+            moves++;
+        }
+
+
+        return finalNode;
+
+    }
+
+    private StateNode getMinKey(HashMap<StateNode, Integer> movesMap){
+        StateNode minKey = null;
+        int minValue = Integer.MAX_VALUE;
+
+        for (StateNode key: movesMap.keySet()){
+            int cost = movesMap.get(key);
+            if (cost < minValue){
+                minValue = cost;
+                minKey = key;
+            }
+        }
+        return minKey;
+
+
+    }
+
+    // TODO IMPLEMENT ASTAR WITH MANHATTAN WHICH USES THE DISTANCE FROM THE CORRECT POSITION
+    // TODO IMPLEMENT ASTAR WITH HAMMING DISTANCE WHIH USES HOW MANY NODES ARE OUT OF PLACE
 
 
 //    public int h1n(){
@@ -556,34 +551,35 @@ public class SearchAlgorithms {
 
 
 
-    public int futureCost(int[] currentA, int[] currentB, int[] currentC, int[] currentAgent){
+    public int futureCost(int[] currentA, int[] currentB, int[] currentC){
         int cost = 0;
 
         int cost1 = Math.abs(currentA[0] - finalAPosition[0]) + Math.abs(currentA[1] - finalAPosition[1]);
         int cost2 = Math.abs(currentB[0] - finalBPosition[0]) + Math.abs(currentB[1] - finalBPosition[1]);
         int cost3 = Math.abs(currentC[0] - finalCPosition[0]) + Math.abs(currentC[1] - finalCPosition[1]);
 
-//        double cost1 = Math.sqrt(Math.pow(Math.abs(currentA[0] - finalAPosition[0]), 2) + Math.pow(Math.abs(currentA[1] - finalAPosition[1]), 2));
-//      double cost2 = Math.sqrt(Math.pow(Math.abs(currentB[0] - finalBPosition[0]), 2) + Math.pow(Math.abs(currentB[1] - finalBPosition[1]), 2));
-//      double cost3 = Math.sqrt(Math.pow(Math.abs(currentC[0] - finalCPosition[0]), 2) + Math.pow(Math.abs(currentC[1] - finalCPosition[1]), 2));
-//
-//        if (cost1 == 0 && cost2 == 0){
-//            // distance from c
-//            cost = Math.abs(finalCPosition[0] - currentAgent[0]) + Math.abs(finalCPosition[1] - currentAgent[1]);
-//        } else if (cost1 == 0 && cost3 == 0){
-//            // distance from b
-//            cost = Math.abs(finalBPosition[0] - currentAgent[0]) + Math.abs(finalBPosition[1] - currentAgent[1]);
-//        } else if (cost2 == 0 &&  cost3 == 0){
-//            // distance from a
-//            cost = Math.abs(finalAPosition[0] - currentAgent[0]) + Math.abs(finalAPosition[1] - currentAgent[1]);
-//        }
-
         cost = cost + cost1 + cost2 + cost3;
-
-
 
         return cost;
 
+    }
+
+    public int hammingFutureCost(int[] currentA, int[] currentB, int[] currentC){
+        int cost = 0;
+
+        if (!(currentA[0] == finalAPosition[0] &&currentA[1] == finalAPosition[1])){
+            cost++;
+        }
+
+        if (!(currentB[0] == finalBPosition[0] && currentB[1] == finalBPosition[1])){
+            cost++;
+        }
+
+        if (!(currentC[0] == finalCPosition[0] && currentC[1] == finalCPosition[1])){
+            cost++;
+        }
+
+        return cost;
     }
 
 

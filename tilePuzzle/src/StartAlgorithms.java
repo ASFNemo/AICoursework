@@ -21,21 +21,21 @@ public class StartAlgorithms {
 
         try {
             SearchAlgorithms DFS = new SearchAlgorithms(4);
-            DFS.startDFS();
+            StateNode totalDepth = DFS.startDFS();
         } catch (OutOfMemoryError e){
             System.out.println("ran out of memory");
         }
 
         try {
             SearchAlgorithms IDDFS = new SearchAlgorithms(4);
-            IDDFS.startIDDFS();
+            IDDFS.IDDFS();
         } catch (OutOfMemoryError e){
             System.out.println("ran out of memory");
         }
 
         try {
             SearchAlgorithms AS = new SearchAlgorithms(4);
-            AS.startAStar();
+            //AS.startAStar();
         } catch (OutOfMemoryError e){
             System.out.println("ran out of memory");
         }

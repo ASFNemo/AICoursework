@@ -19,8 +19,8 @@ public class someTests {
         //test.IfFinalRecognized();
         //test.iddfs();
         //test.AStar();
-        test.xBlockAssignment();
-
+        //test.xBlockAssignment();
+        test.AStarManhattan();
     }
 
     public void stateNode(){
@@ -78,7 +78,7 @@ public class someTests {
     public void BFS(){
 
 
-        SearchAlgorithms SABFS = new SearchAlgorithms(4);
+        SearchAlgorithms SABFS = new SearchAlgorithms(3);
         SABFS.startBFS();
 
 
@@ -223,18 +223,27 @@ public class someTests {
 
     public void iddfs(){
 
-        SearchAlgorithms SAIDDFS = new SearchAlgorithms(4);
-        SAIDDFS.startIDDFS();
+        SearchAlgorithms SAIDDFS = new SearchAlgorithms(8);
+        StateNode node = SAIDDFS.IDDFS();
+        System.out.println(node.getNodeDepth());
     }
 
     public void AStar(){
         SearchAlgorithms SAAS = new SearchAlgorithms(4);
-        SAAS.startAStar();
+        //StateNode node = SAAS.startAStar();
+
+        //System.out.println("the final depth is: " + node.getNodeDepth());
     }
 
     public void xBlockAssignment(){
-        SearchAlgorithms xbTest = new SearchAlgorithms(4, 2);
+        SearchAlgorithms xbTest = new SearchAlgorithms(20, 5);
         xbTest.startBFS();
+    }
+
+    public void AStarManhattan(){
+        SearchAlgorithms SAASM = new SearchAlgorithms(4);
+        StateNode node = SAASM.StartAStar();
+        System.out.println("it went to depth " + node.getNodeDepth());
     }
 
 
