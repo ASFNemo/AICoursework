@@ -13,14 +13,14 @@ public class someTests {
         //test.arraylist();
         //test.BFS();
         //test.randomDirection();
-        //test.DFS();
+        test.DFS();
         //test.testMoveDown();
         //test.testMoveRight();
         //test.IfFinalRecognized();
         //test.iddfs();
         //test.AStar();
         //test.xBlockAssignment();
-        test.AStarManhattan();
+        //test.AStarManhattan();
     }
 
     public void stateNode(){

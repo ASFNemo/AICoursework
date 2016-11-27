@@ -10,6 +10,8 @@ public class Fifo {
      */
 
     ArrayList<StateNode> nodesArray;
+    int elementsInList = 0;
+    int largestList = 0;
 
     public Fifo() {
         this.nodesArray = new ArrayList<>();
@@ -18,6 +20,11 @@ public class Fifo {
     public void addConfig(StateNode node){
         this.nodesArray.add(node);
 
+        elementsInList++;
+
+        if (elementsInList > largestList){
+            largestList = elementsInList;
+        }
         //System.out.println(nodesArray.size());
 
 
@@ -26,10 +33,16 @@ public class Fifo {
     public StateNode getNextNode() {
         StateNode node = this.nodesArray.get(0);
         removeUsedNode();
+        elementsInList--;
         return node;
     }
 
     public void removeUsedNode(){
         this.nodesArray.remove(0);
+    }
+
+
+    public int getLargestList() {
+        return largestList;
     }
 }

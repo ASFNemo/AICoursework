@@ -142,8 +142,8 @@ public class SearchAlgorithms {
 
     public StateNode startDFS() {
 
-        Lifo tree;
-        tree = new Lifo();
+        Fifo tree;
+        tree = new Fifo();
 
 
 
@@ -157,13 +157,13 @@ public class SearchAlgorithms {
             startNode = createStartNodeWithx(this.boardSize, this.xPositions);
         }
 
-        tree.addNode(startNode);
+        tree.addConfig(startNode);
 
-        ArrayList<Character> allMoves = new ArrayList<>();
+//        ArrayList<Character> allMoves = new ArrayList<>();
         int moves = 0;
         while (true) {
             // take the next element from the tree
-            StateNode currentNode = tree.getNode();
+            StateNode currentNode = tree.getNextNode();
 
             // FOR DEBUGGING PURPOSES ONLY, SHOW CURRENT BOARD STATE
             if (moves < 100 || moves == 1500 || moves == 15000 || moves == 90000 || moves == 150000 || moves == 2500000 || moves == 25000000) {
@@ -186,14 +186,15 @@ public class SearchAlgorithms {
                     ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
                     ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1]) || !currentNode.iscBlockInUse())) {
                 // if yes - print the final Node, how many nodes were searched and finish the system
-                char[][] blocksWorld = currentNode.getBlocksWorld();
-                System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
-                for (int j = 0; j < blocksWorld.length; j++) {
-                    System.out.println(blocksWorld[j]);
-                }
+//                char[][] blocksWorld = currentNode.getBlocksWorld();
+//                System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
+//                for (int j = 0; j < blocksWorld.length; j++) {
+//                    System.out.println(blocksWorld[j]);
+//                }
 
                 finalNode = currentNode;
-                System.out.println(allMoves);
+                //System.out.println(allMoves);
+                currentNode.setTotalNodesExpanded(tree.getLargestList());
 
                 break;
             } else {
@@ -213,6 +214,7 @@ public class SearchAlgorithms {
                 while (!canMove) {
                     // get random direction and apply to agent,
                     char direction = getDirection();
+                    currentNode.setDirection(direction);
                     boolean didMove = node.moveAgent(direction);
 
                     if (moves < 100) {
@@ -221,9 +223,9 @@ public class SearchAlgorithms {
 
                     if (didMove) {
                         currentNode.addChild(node);
-                        tree.addNode(node);
+                        tree.addConfig(node);
                         canMove = true;
-                        allMoves.add(direction);
+                        //allMoves.add(direction);
                     }
                     // if cannot move, repeat until one is accepted
                     // if move is accepted add to the queue
@@ -233,6 +235,7 @@ public class SearchAlgorithms {
             }
             moves++;
         }
+
         return finalNode;
     }
 
@@ -275,6 +278,8 @@ public class SearchAlgorithms {
                     System.out.println(blocksWorld[j]);
                 }
                 finalNode = node;
+                finalNode.setNoElementsInTree(tree.getLargestList());
+                finalNode.setTotalNodesExpanded(nodesExpanded);
                 break;
             } else {
                 // else
@@ -348,10 +353,11 @@ public class SearchAlgorithms {
         }
 
         int i = 0;
-
+        setNodesExpandedToZero();
 
 
         while (true){
+            setNumberofNodesThisTimeToZero();
             StateNode found = DLS(startNode, i);
             System.out.println("current depth is: " + i);
             //System.out.println(" I am back from recursion " + i);
@@ -361,6 +367,7 @@ public class SearchAlgorithms {
                 found.setNodeDepth(i);
                 return found;
             }
+
             //System.out.println("not at this depth");
             i++;
         }
@@ -400,9 +407,15 @@ public class SearchAlgorithms {
                             aPosition, bPosition, cPosition, agentPosition, 0);
                 }
                 if (child.moveAgent(moveTO)) {
+                    incrementNumberofNodesThisTime();
+                    incrementExpandedNodes();
+                    child.setDirection(moveTO);
                     StateNode found = DLS(child, (depth - 1));
 
                     if (found != null){
+                        found.setNoElementsInTree(totalnumberofNodesThisTime());
+                        found.setTotalNodesExpanded(totalNodesExpanded());
+                        child.setDirection(moveTO);
                         return found;
                     }
                 }
@@ -418,11 +431,36 @@ public class SearchAlgorithms {
         return null;
     }
 
+    private int numberofNodesThisTime = 0;
+    private void setNumberofNodesThisTimeToZero(){
+        this.numberofNodesThisTime = 0;
+    }
+    private void incrementNumberofNodesThisTime(){
+        this.numberofNodesThisTime++;
+
+    }
+    private int totalnumberofNodesThisTime(){
+        return this.numberofNodesThisTime;
+    }
+
+    int nodesExpanded = 0;
+    private void setNodesExpandedToZero(){
+        this.nodesExpanded = 0;
+    }
+    private void incrementExpandedNodes(){
+        this.nodesExpanded++;
+
+    }
+    private int totalNodesExpanded(){
+        return this.nodesExpanded;
+    }
+
 
     public StateNode StartAStar(){
 
         StateNode finalNode = null;
         int moves = 0;
+        int nodesExpanded = 0;
 
         // create a hashmap that takes in a key = total cost and a value = the node
         HashMap<StateNode, Integer> movesMap = new HashMap<>();
@@ -437,11 +475,11 @@ public class SearchAlgorithms {
         }
 
         // Manhattan Distance
-        //System.out.println("using manhattan distance");
-        //int movesCost = startNode.cost(0, futureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
+        System.out.println("using manhattan distance");
+        int movesCost = startNode.cost(0, futureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
         // Hamming
-        System.out.println("using hamming distance");
-        int movesCost = startNode.cost(0, hammingFutureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
+        //System.out.println("using hamming distance");
+        //int movesCost = startNode.cost(0, hammingFutureCost(startNode.getaPosition(), startNode.getbPosition(), startNode.getcPosition()));
         movesMap.put(startNode, movesCost);
 
         while (true) {
@@ -473,14 +511,12 @@ public class SearchAlgorithms {
             if ((cheapestMoveNode.getaPosition()[0] == finalAPosition[0] && cheapestMoveNode.getaPosition()[1] == finalAPosition[1]) &&
                     ((cheapestMoveNode.getbPosition()[0] == finalBPosition[0] && cheapestMoveNode.getbPosition()[1] == finalBPosition[1]) || !cheapestMoveNode.isbBlockInUse()) &&
                     ((cheapestMoveNode.getcPosition()[0] == finalCPosition[0] && cheapestMoveNode.getcPosition()[1] == finalCPosition[1]) || !cheapestMoveNode.iscBlockInUse())) {
-                // if yes - print the final Node, how many nodes were searched and finish the system
-                char[][] blocksWorld = cheapestMoveNode.getBlocksWorld();
-                System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
-                for (int j = 0; j < blocksWorld.length; j++) {
-                    System.out.println(blocksWorld[j]);
-                }
+
+
 
                 finalNode = cheapestMoveNode;
+                finalNode.setNoElementsInTree(movesMap.size());
+                finalNode.setTotalNodesExpanded(nodesExpanded);
                 break;
             } else {
                 // create a 4 children that move in the 4 directions
@@ -503,13 +539,15 @@ public class SearchAlgorithms {
                                 aPosition, bPosition, cPosition, agentPosition, (cheapestMoveNode.nodeDepth + 1));
                     }
                     if (child.moveAgent(moveTo)) {
-                        // Manhattan distance
-                        //int cost = child.getNodeDepth() + futureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
+                        //Manhattan distance
+                        int cost = child.getNodeDepth() + futureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
                         // HAMMING DISTANCE
-                        int cost = child.getNodeDepth() + hammingFutureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
+                        //int cost = child.getNodeDepth() + hammingFutureCost(child.getaPosition(), child.getbPosition(), child.getcPosition());
 
                         // the ones that can be moved, find their total cost and add to the tree
                         movesMap.put(child, cost);
+                        nodesExpanded++;
+                        child.setDirection(moveTo);
 
                     }
 

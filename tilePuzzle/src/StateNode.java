@@ -25,6 +25,11 @@ public class StateNode {
 
     int currentCost = 0;
     int projectedCost = 0;
+    int totalNodesExpanded = 0;
+
+    char direction;
+
+
 
     int boardSize;
 
@@ -434,5 +439,30 @@ public class StateNode {
     }
     public int[][] getxPositions() {
         return xPositions;
+    }
+
+    public char getDirection() {
+        return direction;
+    }
+
+    public void setDirection(char direction) {
+        this.direction = direction;
+    }
+
+    public int getTotalNodesExpanded() {
+        return totalNodesExpanded;
+    }
+
+    public void setTotalNodesExpanded(int totalNodesExpanded) {
+        this.totalNodesExpanded = totalNodesExpanded;
+    }
+
+    int noElementsInTree;
+    public int getNoElementsInTree(){
+        return this.noElementsInTree;
+    }
+
+    public void setNoElementsInTree(int noElementsInTree) {
+        this.noElementsInTree = noElementsInTree;
     }
 }

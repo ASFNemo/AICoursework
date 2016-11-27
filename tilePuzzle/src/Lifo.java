@@ -10,6 +10,8 @@ public class Lifo {
      */
 
     ArrayList<StateNode> nodesArray;
+    int elementsInList = 0;
+    int largestList = 0;
 
     public Lifo() {
         this.nodesArray = new ArrayList<>();
@@ -17,18 +19,22 @@ public class Lifo {
 
     public void addNode(StateNode node){
         this.nodesArray.add(0, node);
+        elementsInList++;
+
+        if (elementsInList > largestList){
+            largestList = elementsInList;
+        }
     }
 
     public StateNode getNode(){
+        elementsInList--;
         return this.nodesArray.get(0);
+
     }
 
-    public boolean isEmpty(){
-        return nodesArray.isEmpty();
-    }
 
-    public void clearTree(){
-        this.nodesArray.clear();
+    public int getLargestList() {
+        return largestList;
     }
 
 
