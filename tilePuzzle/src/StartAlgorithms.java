@@ -6,36 +6,57 @@ import java.util.ArrayList;
 public class StartAlgorithms {
     public static void main(String[] args) {
         StartAlgorithms SA = new StartAlgorithms();
-        SA.testBFS();
+        SA.testDFS();
+        //SA.testAStar();
 
     }
 
-    public void testDFS(){
-        try {
-            SearchAlgorithms DFS = new SearchAlgorithms(4);
-            StateNode finalNode = DFS.startDFS();
+    public void testDFS() {
 
-            int nodesExpanded = finalNode.getNodeDepth();
+        int storedNodes = 0;
+        int nodesExpanded = 0;
+        int routeLength = 0;
 
-            ArrayList<Character> moves = new ArrayList<>();
-            moves.add(0, finalNode.getDirection());
-            StateNode parentNode = finalNode.getParentNode();
+        for (int i = 0; i < 15; i++) {
+            try {
+                SearchAlgorithms DFS = new SearchAlgorithms(5);
+                StateNode finalNode = DFS.startDFS();
 
-            while (parentNode.getParentNode() != null) {
 
-                moves.add(0, parentNode.getDirection());
 
-                parentNode = parentNode.getParentNode();
+                int maxTree = finalNode.getNoElementsInTree();
 
+                ArrayList<Character> moves = new ArrayList<>();
+
+                moves.add(0, finalNode.getDirection());
+
+                StateNode parentNode = finalNode.getParentNode();
+
+                while (parentNode.getParentNode() != null) {
+
+                    moves.add(0, parentNode.getDirection());
+
+                    parentNode = parentNode.getParentNode();
+
+                }
+
+                storedNodes = storedNodes + finalNode.getNoElementsInTree();
+                nodesExpanded = nodesExpanded + finalNode.getTotalNodesExpanded();
+                routeLength = routeLength + moves.size();
+
+                System.out.println("DFS expanded: " + finalNode.getTotalNodesExpanded() + " nodes");
+                System.out.println("IDDFS number of nodes stored in the tree at most: " + maxTree + " nodes");
+                System.out.println("the solution was reached in: " + moves.size() + " steps");
+                System.out.println("the moves taken were" + moves);
+
+
+            } catch (OutOfMemoryError e) {
+                System.out.println("ran out of memory");
             }
-
-            System.out.println("DFS expanded: " + nodesExpanded + " nodes");
-            System.out.println("the solution was reached in: " + moves.size() + " steps");
-            System.out.println("the moves taken were" + moves);
-
-        } catch (OutOfMemoryError e){
-            System.out.println("ran out of memory");
         }
+        System.out.println("the tree stored at most: " + (storedNodes/15) + " nodes");
+        System.out.println("total nodes expanded: " + (nodesExpanded/15));
+        System.out.println("route length: " + (routeLength/15));
     }
 
 
@@ -44,7 +65,7 @@ public class StartAlgorithms {
 
     public void testIDDFS(){
         try {
-            SearchAlgorithms IDDFS = new SearchAlgorithms(4);
+            SearchAlgorithms IDDFS = new SearchAlgorithms(6);
             StateNode finalNode = IDDFS.IDDFS();
 
             int nodesExpanded = finalNode.getTotalNodesExpanded();
@@ -61,7 +82,6 @@ public class StartAlgorithms {
                 parentNode = parentNode.getParentNode();
 
             }
-
             System.out.println("IDDFS expanded: " + nodesExpanded + " nodes");
             System.out.println("IDDFS number of nodes stored in the tree at most: " + spaceUsed + " nodes");
             System.out.println("the solution was reached in: " + moves.size() + " steps");
@@ -74,7 +94,7 @@ public class StartAlgorithms {
 
     public void testAStar(){
         try {
-            SearchAlgorithms AS = new SearchAlgorithms(4);
+            SearchAlgorithms AS = new SearchAlgorithms(5);
             StateNode finalNode = AS.StartAStar();
 
 
@@ -128,8 +148,8 @@ public class StartAlgorithms {
 
             }
 
-            System.out.println("BFS expanded: " + nodesExpanded + " nodes");
-            System.out.println("BFS number of nodes stored in the tree at most: " + spaceUsed + " nodes");
+            System.out.println("BFS expanded: " + spaceUsed + " nodes");
+            System.out.println("BFS number of nodes stored in the tree at most: " + nodesExpanded + " nodes");
             System.out.println("the solution was reached in: " + moves.size() + " steps");
             System.out.println("the moves taken were" + moves);
         } catch (OutOfMemoryError e){
@@ -137,25 +157,5 @@ public class StartAlgorithms {
         }
     }
 
-    public void start(){
-
-
-
-
-
-
-
-
-
-
-
-        //TODO: AS AN EXTENSION: CREATE AN ALGORITHM THAT FINDS THE MOST EFFICIENT PLACE TO ADD THE X TILES
-
-
-
-
-
-
-    }
 
 }

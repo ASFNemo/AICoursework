@@ -6,16 +6,7 @@ import java.util.Random;
  * Created by asherfischbaum on 06/10/2016.
  */
 public class StateNode {
-
-    //private final char wall = 'w';
-//    private final char plainTile = 'p';
-//    private final char tileA = 'a';
-//    private final char tileB = 'b';
-//    private final char tileC = 'c';
-//    private final char smileTile = 's';
-
     StateNode parentNode;
-    ArrayList<StateNode> children;
 
     int[] aPosition;
     int[] bPosition;
@@ -96,13 +87,9 @@ public class StateNode {
             newArray[1] = rn.nextInt((boardSizeN - 1) + 1);
             System.out.println("ii" + newArray[1]);
 
-//            int k = 0;
-//            int j = 0;
-//            while (j < XTilesPosition.length)
             if (!Arrays.equals(XTilesPosition[i], newArray) && !Arrays.equals(TAPosition, newArray)
                     && !Arrays.equals(TBPosition, newArray) && !Arrays.equals(TCPosition, newArray)
                     && !Arrays.equals(agentsPostion, newArray)) {
-                //k++;
                 XTilesPosition[i][0] = newArray[0];
                 XTilesPosition[i][1] = newArray[1];
                 i++;
@@ -150,7 +137,6 @@ public class StateNode {
 
     private void createNode(StateNode parent, int boardSizeN, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
         this.parentNode = parent;
-        children = new ArrayList<>();
 
         aPosition = new int[2];
         bPosition = new int[2];
@@ -193,11 +179,6 @@ public class StateNode {
                     }
                 }
             }
-
-//            System.out.println("This is tge initial state of the board");
-//            for (int i = 0; i < blocksWorld.length; i++){
-//                System.out.println(blocksWorld[i]);
-//            }
         } else {
             System.out.println(" the board size has to be greater than one");
             System.exit(0);
@@ -206,7 +187,6 @@ public class StateNode {
 
     public void createNodeWithX(StateNode parent, int boardSizeN, int[][] xPositions, int[] TAPosition, int[] TBPosition, int[] TCPosition, int[] agentsPostion){
         this.parentNode = parent;
-        children = new ArrayList<>();
 
         aPosition = new int[2];
         bPosition = new int[2];
@@ -240,35 +220,26 @@ public class StateNode {
                         if (i == TAPosition[0] && j == TAPosition[1]) {
                             blocksWorld[i][j] = 'a';
                             aPosition = TAPosition;
-                            //System.out.println("a");
                         } else if (i == TBPosition[0] && j == TBPosition[1] && boardSizeN > 2) {
                             blocksWorld[i][j] = 'b';
                             bPosition = TBPosition;
                             bBlockInUse = true;
-                            //System.out.println('b');
                         } else if (i == TCPosition[0] && j == TCPosition[1] && boardSizeN > 3) {
                             blocksWorld[i][j] = 'c';
                             cPosition = TCPosition;
-                            //System.out.println('c');
                             cBlockInUse = true;
 
                         } else if (i == agentsPostion[0] && j == agentsPostion[1]) {
                             blocksWorld[i][j] = 's';
                             this.agentPosition = agentsPostion;
-                            //System.out.println('s');
 
                         } else {
                             blocksWorld[i][j] = 'p';
-                            //System.out.println('p');
                         }
                     }
                 }
             }
 
-//            System.out.println("This is the final state of the board");
-//            for (int i = 0; i < blocksWorld.length; i++){
-//                System.out.println(blocksWorld[i]);
-//            }
         } else {
             System.out.println(" the board size has to be greater than one");
             System.exit(0);
@@ -334,7 +305,6 @@ public class StateNode {
         if (!thereIsAnX) {
 
             if (moveAgentTo[0] < 0 || moveAgentTo[1] < 0 || moveAgentTo[0] > (boardSize - 1) || moveAgentTo[1] > (boardSize - 1)) {
-                //System.out.println("in the if statment");
                 // return false as you cannot do this mpve as it would move the agent of the board
                 couldComplete = false;
             } else {
@@ -362,7 +332,6 @@ public class StateNode {
             }
         }
 
-        //System.out.println(couldComplete);
         // if the move was done return true, if it cannot be done return false
         return couldComplete;
     }
@@ -392,9 +361,6 @@ public class StateNode {
         return boardSize;
     }
 
-    public void addChild(StateNode node){
-        children.add(node);
-    }
 
     public boolean isbBlockInUse() {
         return bBlockInUse;
@@ -410,10 +376,6 @@ public class StateNode {
 
     public StateNode getParentNode() {
         return parentNode;
-    }
-
-    public ArrayList<StateNode> getChildren() {
-        return children;
     }
 
     public int getCurrentCost() {

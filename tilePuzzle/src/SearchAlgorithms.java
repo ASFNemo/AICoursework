@@ -80,7 +80,6 @@ public class SearchAlgorithms {
         for (int i = 0; i < xPositions.length; i++){
             if (Arrays.equals(xPositions[i], finalAPosition) || Arrays.equals(finalBPosition, xPositions[i])
                     || Arrays.equals(xPositions[i], finalCPosition) || xPositions[i][0] == (size -1)){
-                // todo: remove the element from the ARRAy!!!
             }
         }
 
@@ -142,8 +141,8 @@ public class SearchAlgorithms {
 
     public StateNode startDFS() {
 
-        Fifo tree;
-        tree = new Fifo();
+        Lifo tree;
+        tree = new Lifo();
 
 
 
@@ -157,13 +156,13 @@ public class SearchAlgorithms {
             startNode = createStartNodeWithx(this.boardSize, this.xPositions);
         }
 
-        tree.addConfig(startNode);
+        tree.addNode(startNode);
 
-//        ArrayList<Character> allMoves = new ArrayList<>();
         int moves = 0;
+        int nodesExpanded = 0;
         while (true) {
             // take the next element from the tree
-            StateNode currentNode = tree.getNextNode();
+            StateNode currentNode = tree.getNode();
 
             // FOR DEBUGGING PURPOSES ONLY, SHOW CURRENT BOARD STATE
             if (moves < 100 || moves == 1500 || moves == 15000 || moves == 90000 || moves == 150000 || moves == 2500000 || moves == 25000000) {
@@ -186,53 +185,48 @@ public class SearchAlgorithms {
                     ((currentNode.getbPosition()[0] == finalBPosition[0] && currentNode.getbPosition()[1] == finalBPosition[1]) || !currentNode.isbBlockInUse()) &&
                     ((currentNode.getcPosition()[0] == finalCPosition[0] && currentNode.getcPosition()[1] == finalCPosition[1]) || !currentNode.iscBlockInUse())) {
                 // if yes - print the final Node, how many nodes were searched and finish the system
-//                char[][] blocksWorld = currentNode.getBlocksWorld();
-//                System.out.println("Depth first search has been able to complete the puzzle in: " + moves + " moves!");
-//                for (int j = 0; j < blocksWorld.length; j++) {
-//                    System.out.println(blocksWorld[j]);
-//                }
 
                 finalNode = currentNode;
-                //System.out.println(allMoves);
-                currentNode.setTotalNodesExpanded(tree.getLargestList());
+                currentNode.setTotalNodesExpanded(nodesExpanded);
+                currentNode.setNoElementsInTree(tree.getLargestList());
 
                 break;
             } else {
-                //if no
 
-                StateNode node;
+                char[] directions = randomDirection();
 
-                if (!this.xPositionUsed) {
-                    node = new StateNode(currentNode, currentNode.boardSize, currentNode.aPosition,
-                            currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition, (currentNode.nodeDepth +1));
-                } else {
-                    node = new StateNode(currentNode, currentNode.boardSize, currentNode.getxPositions(), currentNode.aPosition,
-                            currentNode.bPosition, currentNode.cPosition, currentNode.agentPosition, (currentNode.nodeDepth + 1));
-                }
+                for (char direction: directions){
 
-                boolean canMove = false;
-                while (!canMove) {
-                    // get random direction and apply to agent,
-                    char direction = getDirection();
-                    currentNode.setDirection(direction);
-                    boolean didMove = node.moveAgent(direction);
 
-                    if (moves < 100) {
-                        System.out.println("direction: " + direction + " did move? " + didMove);
+                    int[] aPosition = Arrays.copyOf(currentNode.getaPosition(), currentNode.getaPosition().length);
+                    int[] bPosition = Arrays.copyOf(currentNode.getbPosition(), currentNode.getbPosition().length);
+                    int[] cPosition = Arrays.copyOf(currentNode.getcPosition(), currentNode.getcPosition().length);
+                    int[] agentPosition = Arrays.copyOf(currentNode.getAgentPosition(), currentNode.getAgentPosition().length);
+
+                    StateNode childNode;
+
+                    if (!this.xPositionUsed) {
+                        childNode = new StateNode(currentNode, currentNode.getBoardSize(), aPosition,
+                                bPosition, cPosition, agentPosition,(currentNode.getNodeDepth() +1));
+                    }  else {
+                        childNode = new StateNode(currentNode, currentNode.getBoardSize(),currentNode.getxPositions(), aPosition,
+                                bPosition, cPosition, agentPosition,(currentNode.getNodeDepth() +1));
                     }
 
-                    if (didMove) {
-                        currentNode.addChild(node);
-                        tree.addConfig(node);
-                        canMove = true;
-                        //allMoves.add(direction);
+                    childNode.setDirection(direction);
+
+                    if (childNode.moveAgent(direction)){
+                        nodesExpanded++;
+                        tree.addNode(childNode);
                     }
-                    // if cannot move, repeat until one is accepted
-                    // if move is accepted add to the queue
+
                 }
+
+
 
 
             }
+
             moves++;
         }
 
@@ -263,9 +257,6 @@ public class SearchAlgorithms {
 
             // check if it is the final node
             // if yes - print that it is in final state and how many expanded nodes it took
-//            if ((node.getaPosition()[0] == finalAPosition[0] && node.getaPosition()[1] == finalAPosition[1]) &&
-//                    ((node.getbPosition()[0] == finalBPosition[0] && node.getbPosition()[1] == finalBPosition[1]) || !node.isbBlockInUse()) &&
-//                    ((node.getcPosition()[0] == finalCPosition[0] && node.getcPosition()[1] == finalCPosition[1])|| !node.iscBlockInUse())) {
             if (((node.getaPosition()[0] == finalAPosition[0] && node.getaPosition()[1] == finalAPosition[1])) &&
                     ((node.getbPosition()[0] == finalBPosition[0] && node.getbPosition()[1] == finalBPosition[1]) || !node.isbBlockInUse()) &&
                             ((node.getcPosition()[0] == finalCPosition[0] && node.getcPosition()[1] == finalCPosition[1])|| !node.iscBlockInUse())) {
@@ -321,14 +312,14 @@ public class SearchAlgorithms {
                     // if yes add them to the states children and add them to the tree
                     if (childNode.moveAgent(direction)){
 
+                        childNode.setDirection(direction);
+
                         if (nodesExpanded < 30){
                             char[][] blocksWorld = childNode.getBlocksWorld();
                             for (int j = 0; j < blocksWorld.length; j++) {
                                 System.out.println(blocksWorld[j]);
                             }
                         }
-
-                        node.addChild(childNode);
                         tree.addConfig(childNode);
                     }
                 }
@@ -427,7 +418,6 @@ public class SearchAlgorithms {
 
 
         }
-        //System.out.println("about to return null");
         return null;
     }
 
@@ -485,6 +475,7 @@ public class SearchAlgorithms {
         while (true) {
             // find the total least expensive node
             StateNode cheapestMoveNode = getMinKey(movesMap);
+            int moveCost = movesMap.get(cheapestMoveNode);
             movesMap.remove(cheapestMoveNode);
 
 
@@ -499,6 +490,7 @@ public class SearchAlgorithms {
                 System.out.println("c position: " + cheapestMoveNode.cPosition[0] + "," + cheapestMoveNode.cPosition[1]);
                 System.out.println("agent position: " + cheapestMoveNode.agentPosition[0] + "," + cheapestMoveNode.agentPosition[1]);
                 System.out.println("curret cost: " + cheapestMoveNode.getNodeDepth());
+                System.out.println("future cost: " + (moveCost - cheapestMoveNode.getNodeDepth()));
 
                 for (int j = 0; j < blocksWorld.length; j++) {
                     System.out.println(blocksWorld[j]);
@@ -578,15 +570,6 @@ public class SearchAlgorithms {
 
 
     }
-
-    // TODO IMPLEMENT ASTAR WITH MANHATTAN WHICH USES THE DISTANCE FROM THE CORRECT POSITION
-    // TODO IMPLEMENT ASTAR WITH HAMMING DISTANCE WHIH USES HOW MANY NODES ARE OUT OF PLACE
-
-
-//    public int h1n(){
-//
-//    }
-
 
 
     public int futureCost(int[] currentA, int[] currentB, int[] currentC){
